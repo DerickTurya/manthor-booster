@@ -309,24 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '6': 'https://rad-supply.mycartpanda.com/checkout/202811355:1'
   };
   function applyCheckoutLinks() {
-    try {
-      const raw = localStorage.getItem('manthor_checkout_links');
-      const links = raw ? JSON.parse(raw) : defaultCheckoutLinks;
-      [['1','buy-1-btn'], ['3','buy-3-btn'], ['6','buy-6-btn']].forEach(([months,id]) => {
-        const btn = document.getElementById(id);
-        if (!btn) return;
-        const url = links[months] || '#';
-        btn.dataset.url = url;
-        btn.onclick = (e) => {
-          if (!url || url === '#') {
-            e.preventDefault();
-            alert('Checkout link for ' + months + ' months is not configured yet. Send the URL or use setCheckoutLinks in the console.');
-            return;
-          }
-          window.location.href = url;
-        };
-      });
-    } catch (e) { console.warn('applyCheckoutLinks failed', e); }
+    // Checkout links disabled - buttons are now static
   }
 
   // Expose helper to set checkout links from console or programmatically
