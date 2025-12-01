@@ -533,21 +533,7 @@
   </div>
 
   <script>
-    // Check authentication
-    const token = localStorage.getItem('manthor_token');
-    const user = JSON.parse(localStorage.getItem('manthor_user') || '{}');
-
-    if (!token) {
-      window.location.href = '/login.html';
-    }
-
-    // Show user name
-    if (user.name) {
-      const welcomeMsg = document.createElement('p');
-      welcomeMsg.textContent = `Welcome, ${user.name}! 💪`;
-      welcomeMsg.style.cssText = 'color:#f97316;font-size:16px;margin-top:10px;font-weight:600;';
-      document.querySelector('.subtitle').after(welcomeMsg);
-    }
+    // No authentication required
 
     // Authenticated API
     const API_URL = 'http://localhost:3000/api';
@@ -566,14 +552,6 @@
       }
 
       const response = await fetch(`${API_URL}${endpoint}`, options);
-      
-      if (response.status === 401) {
-        localStorage.removeItem('manthor_token');
-        localStorage.removeItem('manthor_user');
-        window.location.href = '/';
-        return;
-      }
-
       return response.json();
     }
 
