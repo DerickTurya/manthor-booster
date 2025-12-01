@@ -347,7 +347,7 @@
         
         messagesDiv.innerHTML += `
           <div style="background:rgba(220,38,38,0.2);padding:12px 16px;border-radius:10px;margin-bottom:12px;border:2px solid #dc2626;">
-            <p style="color:#dc2626;margin:0;font-size:14px;"><strong>Error:</strong> Could not connect to AI. Please try again.</p>
+            <p style="color:#dc2626;margin:0;font-size:14px;"><strong>Error:</strong> ${escapeHtml(error.message || 'Could not connect to AI. Please try again.')}</p>
           </div>
         `;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -381,7 +381,8 @@ You're having a flirty, engaging conversation. Be playful, warm, and show intere
       });
       
       if (!response.ok) {
-        throw new Error('API request failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `API request failed with status ${response.status}`);
       }
       
       const data = await response.json();
