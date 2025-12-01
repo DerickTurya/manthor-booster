@@ -433,31 +433,20 @@
 
         // Show/hide fields based on selected goal
         const goalSelect = document.getElementById('gen-goal');
-        const premiumNotice = document.getElementById('premium-notice');
         const formFields = document.getElementById('form-fields');
         
-        if (goalSelect && premiumNotice && formFields) {
+        if (goalSelect && formFields) {
           goalSelect.addEventListener('change', function() {
             const selectedGoal = this.value;
             
             if (!selectedGoal) {
               // No goal selected
-              premiumNotice.style.display = 'none';
               formFields.style.display = 'none';
               return;
             }
             
-            const isPremium = ['gain_mass', 'lose_weight', 'definition'].includes(selectedGoal);
-            
-            if (isPremium) {
-              // Premium goal - show notice, hide form
-              premiumNotice.style.display = 'block';
-              formFields.style.display = 'none';
-            } else {
-              // Free goal (vitality) - hide notice, show form
-              premiumNotice.style.display = 'none';
-              formFields.style.display = 'block';
-            }
+            // All goals are now available as bonus - show form
+            formFields.style.display = 'block';
           });
         }
 
@@ -469,15 +458,6 @@
             const height = parseFloat(document.getElementById('gen-height')?.value);
             const activity = document.getElementById('gen-activity')?.value || 'light';
             const goalVal = document.getElementById('gen-goal')?.value || 'vitality';
-            
-            // Check if premium goal selected
-            const premiumGoals = ['gain_mass', 'lose_weight', 'definition'];
-            if (premiumGoals.includes(goalVal)) {
-              alert('🔒 This is a PREMIUM plan!\n\nAdvanced goals (Muscle Gain, Weight Loss, Definition) require a premium subscription.\n\nClick "Unlock Premium Plans" to get access or select "Vitality & Wellness" (FREE).');
-              document.getElementById('premium-notice').style.display = 'block';
-              document.getElementById('premium-notice').scrollIntoView({ behavior: 'smooth', block: 'center' });
-              return;
-            }
             
             if (!weight || !height) {
               alert('⚠️ Please enter your weight and height!');
