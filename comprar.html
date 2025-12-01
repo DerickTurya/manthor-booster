@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Buy - ManThor</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .purchase-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    
+    .purchase-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    .purchase-header h1 {
+      color: #f97316;
+      font-size: 42px;
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+    }
+    
+    .purchase-header p {
+      color: #d1d5db;
+      font-size: 18px;
+      margin: 0;
+    }
+    
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .package-card {
+      background: linear-gradient(135deg, rgba(220,38,38,0.15), rgba(249,115,22,0.1));
+      border: 2px solid rgba(220,38,38,0.3);
+      border-radius: 16px;
+      padding: 30px 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .package-card:hover {
+      transform: translateY(-8px);
+      border-color: #f97316;
+      box-shadow: 0 15px 40px rgba(220,38,38,0.4);
+    }
+    
+    .package-card.popular {
+      border-color: #fbbf24;
+      background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(249,115,22,0.15));
+    }
+    
+    .package-card.popular::before {
+      content: "⭐ MOST POPULAR";
+      position: absolute;
+      top: 16px;
+      right: -35px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+      padding: 6px 45px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      transform: rotate(45deg);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .package-image {
+      width: 100%;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background: transparent;
+      border-radius: 12px;
+    }
+    
+    .package-image img {
+      max-width: 90%;
+      max-height: 200px;
+      object-fit: contain;
+    }
+    
+    .package-title {
+      color: #f97316;
+      font-size: 26px;
+      font-weight: 900;
+      margin: 0 0 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .package-duration {
+      color: #fbbf24;
+      font-size: 32px;
+      font-weight: 900;
+      margin: 0 0 12px 0;
+    }
+    
+    .package-description {
+      color: #d1d5db;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      min-height: 48px;
+    }
+    
+    .package-benefits {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    
+    .package-benefits li {
+      color: #d1d5db;
+      font-size: 14px;
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+    }
+    
+    .package-benefits li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #22c55e;
+      font-weight: 900;
+      font-size: 18px;
+    }
+    
+    .package-price {
+      text-align: center;
+      margin: 20px 0;
+      padding: 16px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 10px;
+    }
+    
+    .package-price .price-value {
+      color: #fbbf24;
+      font-size: 36px;
+      font-weight: 900;
+    }
+    
+    .package-price .price-label {
+      color: #9ca3af;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    
+    .package-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      border: 2px solid #f97316;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(220,38,38,0.3);
+    }
+    
+    .package-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(220,38,38,0.5);
+      background: linear-gradient(135deg, #b91c1c, #991b1b);
+    }
+    
+    .guarantee-section {
+      background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05));
+      border: 2px solid rgba(34,197,94,0.3);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .guarantee-section h3 {
+      color: #22c55e;
+      font-size: 24px;
+      margin: 0 0 12px 0;
+    }
+    
+    .guarantee-section p {
+      color: #d1d5db;
+      font-size: 15px;
+      line-height: 1.8;
+      margin: 0;
+    }
+    
+    .back-link {
+      display: inline-block;
+      padding: 14px 32px;
+      background: transparent;
+      border: 2px solid #dc2626;
+      border-radius: 10px;
+      color: #dc2626;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    
+    .back-link:hover {
+      background: rgba(220,38,38,0.1);
+      transform: translateX(-5px);
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .purchase-container {
+        padding: 12px;
+        margin: 20px auto;
+      }
+      
+      .purchase-header h1 {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+      
+      .purchase-header p {
+        font-size: 15px;
+      }
+      
+      .packages-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      
+      .package-card {
+        padding: 24px 20px;
+      }
+      
+      .package-card.popular::before {
+        font-size: 10px;
+        padding: 5px 40px;
+        top: 12px;
+        right: -32px;
+      }
+      
+      .package-title {
+        font-size: 22px;
+      }
+      
+      .package-duration {
+        font-size: 26px;
+      }
+      
+      .package-description {
+        font-size: 14px;
+        min-height: auto;
+      }
+      
+      .package-benefits li {
+        font-size: 13px;
+        padding: 6px 0;
+      }
+      
+      .package-price .price-value {
+        font-size: 32px;
+      }
+      
+      .package-btn {
+        font-size: 15px;
+        padding: 14px;
+      }
+      
+      .guarantee-section {
+        padding: 24px 20px;
+      }
+      
+      .guarantee-section h3 {
+        font-size: 20px;
+      }
+      
+      .guarantee-section p {
+        font-size: 14px;
+      }
+      
+      .back-link {
+        width: 100%;
+        text-align: center;
+        padding: 12px 24px;
+      }
+    }
+    
+    /* Tablet responsiveness */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .purchase-container {
+        padding: 16px;
+      }
+      
+      .purchase-header h1 {
+        font-size: 36px;
+      }
+      
+      .purchase-header p {
+        font-size: 17px;
+      }
+      
+      .packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      
+      .package-card:last-child {
+        grid-column: span 2;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="purchase-container">
+      <div class="purchase-header">
+        <h1>🔥 Premium Plans</h1>
+        <p>Unlock advanced nutrition plans and maximize your results</p>
+        <div style="display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:8px;color:#000;font-weight:900;font-size:14px;letter-spacing:1px;box-shadow:0 4px 15px rgba(251,191,36,0.4);">
+          🌟 VIP CLIENT • 10% EXCLUSIVE DISCOUNT
+        </div>
+      </div>
+
+      <div class="packages-grid">
+        <!-- 3 Months Package -->
+        <div class="package-card">
+          <div class="package-image">
+            <img src="assets/MAN THOR DROPS-5.png" alt="ManThor 3 months" onerror="this.innerHTML='<div style=&quot;font-size:80px;&quot;>🧴</div>'">
+          </div>
+          <h3 class="package-title">Starter</h3>
+          <div class="package-duration">3 Months</div>
+          <p class="package-description">Perfect to get started with your wellness journey</p>
+          
+          <ul class="package-benefits">
+            <li>3 ManThor bottles</li>
+            <li>All premium diet plans</li>
+            <li>Personalized macros calculator</li>
+            <li>Natural food substitutions</li>
+          </ul>
+          
+          <div class="package-price">
+            <div style="color:#9ca3af;font-size:14px;text-decoration:line-through;margin-bottom:4px;">$207</div>
+            <div class="price-value">$187</div>
+            <div class="price-label">🌟 VIP Discount 10% OFF</div>
+          </div>
+          
+          <button id="buy-1-btn" class="package-btn">🛒 Buy Now</button>
+        </div>
+
+        <!-- 6 Months Package -->
+        <div class="package-card">
+          <div class="package-image">
+            <img src="assets/MAN THOR DROPS-1.png" alt="ManThor 6 months" onerror="this.innerHTML='<div style=&quot;font-size:80px;&quot;>🧴🧴</div>'">
+          </div>
+          <h3 class="package-title">Best Value</h3>
+          <div class="package-duration">6 Months</div>
+          <p class="package-description">Great balance of results and savings</p>
+          
+          <ul class="package-benefits">
+            <li>6 ManThor bottles</li>
+            <li>All premium diet plans</li>
+            <li>Personalized macros calculator</li>
+            <li>Natural food substitutions</li>
+            <li>Save $109 vs buying 3-month twice</li>
+          </ul>
+          
+          <div class="package-price">
+            <div style="color:#9ca3af;font-size:14px;text-decoration:line-through;margin-bottom:4px;">$294</div>
+            <div class="price-value">$265</div>
+            <div class="price-label">🌟 VIP Discount 10% OFF</div>
+          </div>
+          
+          <button id="buy-3-btn" class="package-btn">🛒 Buy Now</button>
+        </div>
+
+        <!-- 9 Months Package (Popular) -->
+        <div class="package-card popular">
+          <div class="package-image">
+            <img src="assets/manthor_9_drops.png" alt="ManThor 9 months" onerror="this.innerHTML='<div style=&quot;font-size:80px;&quot;>🧴🧴🧴</div>'">
+          </div>
+          <h3 class="package-title">Most Popular</h3>
+          <div class="package-duration">9 Months</div>
+          <p class="package-description">Complete transformation • Maximum results & savings</p>
+          
+          <ul class="package-benefits">
+            <li>9 ManThor bottles</li>
+            <li>All premium diet plans</li>
+            <li>Personalized macros calculator</li>
+            <li>Natural food substitutions</li>
+            <li>Save $163.50 vs buying 3-month 3x</li>
+            <li>Priority support</li>
+          </ul>
+          
+          <div class="package-price">
+            <div style="color:#9ca3af;font-size:14px;text-decoration:line-through;margin-bottom:4px;">$795</div>
+            <div class="price-value">$397.50</div>
+            <div class="price-label">🔥 VIP MEGA Discount 50% OFF</div>
+          </div>
+          
+          <button id="buy-6-btn" class="package-btn">🛒 Buy Now</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <a class="back-link" href="index.html">← Back to Main</a>
+      </div>
+    </div>
+    
+    <script src="script.js" defer></script>
+  </div>
+</body>
+</html>

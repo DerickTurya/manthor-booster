@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManThor - Power for Modern Man</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Efeitos de fundo Thor */
+    .background-effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .red-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    .glow-1 { top: -100px; left: -100px; }
+    .glow-2 { bottom: -150px; right: -150px; animation-delay: 2s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    @keyframes float-rune {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    @keyframes lightning-flash {
+      0%, 100% { opacity: 0; }
+      10%, 30%, 50% { opacity: 1; }
+      20%, 40%, 60% { opacity: 0.3; }
+    }
+
+    /* Container principal */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .viking-badge {
+      display: inline-block;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .flag-backdrop {
+      font-size: 80px;
+      filter: brightness(0.7);
+    }
+
+    .viking-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 50px;
+      text-shadow: 0 0 20px rgba(220, 38, 38, 0.8);
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #d1d5db;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    /* Vitrine do produto */
+    .product-showcase {
+      text-align: center;
+      margin: 60px 0;
+      position: relative;
+    }
+
+    .bottle-container {
+      position: relative;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .bottle {
+      width: 200px;
+      height: 280px;
+      background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+      border: 3px solid #dc2626;
+      border-radius: 15px 15px 30px 30px;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(220, 38, 38, 0.4);
+    }
+
+    .bottle-cap {
+      width: 60px;
+      height: 30px;
+      background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+      border-radius: 10px 10px 0 0;
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 -5px 15px rgba(220, 38, 38, 0.6);
+    }
+
+    .bottle-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 60px;
+    }
+
+    /* Formulário calculadora */
+    .calculator {
+      background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
+      border: 2px solid rgba(220, 38, 38, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 0 auto 40px auto;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 14px;
+      color: #f97316;
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input, select {
+      padding: 12px;
+      background: rgba(10, 10, 10, 0.8);
+      border: 1px solid #dc2626;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #f97316;
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+    }
+
+    .btn-calculate {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      border: 2px solid #f97316;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+    }
+
+    .btn-calculate:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(220, 38, 38, 0.6);
+    }
+
+    .btn-calculate:active {
+      transform: translateY(0);
+    }
+
+    /* Resultado */
+    .result {
+      display: none;
+      background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
+      border: 2px solid rgba(220, 38, 38, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px auto;
+      max-width: 700px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .result h2 {
+      color: #f97316;
+      margin-bottom: 20px;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .result-content {
+      color: #d1d5db;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .result-content strong {
+      color: #f97316;
+    }
+
+    .result-content ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+
+    .result-content li {
+      margin: 8px 0;
+    }
+
+    /* Cards de ação */
+    .action-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 60px 0;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(20, 20, 20, 0.9) 100%);
+      border: 2px solid rgba(220, 38, 38, 0.3);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: #f97316;
+      box-shadow: 0 15px 40px rgba(220, 38, 38, 0.4);
+    }
+
+    .card-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f97316;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: #9ca3af;
+      line-height: 1.6;
+    }
+    
+    /* Logout button styles */
+    #logout-btn:hover {
+      background: rgba(220, 38, 38, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 12px;
+      }
+      
+      .header {
+        padding: 20px 12px;
+      }
+      
+      h1 { 
+        font-size: 32px !important;
+        letter-spacing: 1px !important;
+      }
+      
+      .subtitle {
+        font-size: 14px;
+      }
+      
+      .flag-backdrop {
+        font-size: 60px;
+      }
+      
+      .viking-icon {
+        font-size: 40px;
+      }
+      
+      .product-showcase {
+        padding: 20px 0;
+      }
+      
+      .bottle { 
+        width: 140px; 
+        height: 200px; 
+      }
+      
+      .calculator {
+        padding: 20px 16px;
+        margin: 20px auto;
+        max-width: 100%;
+      }
+      
+      .form-grid { 
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .input-group label {
+        font-size: 13px;
+      }
+      
+      .input-group input,
+      .input-group select {
+        padding: 12px;
+        font-size: 15px;
+      }
+      
+      .btn-calculate {
+        padding: 14px;
+        font-size: 15px;
+        margin-top: 20px;
+      }
+      
+      .result {
+        padding: 20px 16px;
+        margin: 20px auto;
+        max-width: 100%;
+      }
+      
+      .result h2 {
+        font-size: 22px;
+        margin-bottom: 16px;
+      }
+      
+      .action-cards { 
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0;
+      }
+      
+      .card {
+        padding: 20px 16px;
+      }
+      
+      .card-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+      }
+      
+      .card-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      
+      .card-description {
+        font-size: 13px;
+      }
+    }
+    
+    /* Tablet adjustments */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .container {
+        padding: 16px;
+      }
+      
+      h1 {
+        font-size: 44px !important;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .action-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      
+      .action-cards .card:last-child {
+        grid-column: span 2;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Efeitos de fundo -->
+  <div class="background-effects" id="bg-effects">
+    <div class="red-glow glow-1"></div>
+    <div class="red-glow glow-2"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1 style="font-size:56px;font-weight:900;background:linear-gradient(180deg, #f4e4c1 0%, #d4a574 40%, #8b6f47 80%, #2a2520 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#d4a574;letter-spacing:2px;margin:0 0 8px 0;font-family:'Segoe UI',Arial,sans-serif;display:inline-block;">MANTHOR</h1>
+      <p class="subtitle">Power for Modern Man</p>
+    </header>
+
+    <!-- Product showcase -->
+    <div class="product-showcase">
+      <div class="bottle-container">
+        <div class="bottle">
+          <div class="bottle-cap"></div>
+          <div class="bottle-label">💪</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculator -->
+    <div class="calculator">
+      <form id="calc-form" autocomplete="off">
+        <div class="form-grid">
+          <div class="input-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" placeholder="Ex: 35" min="18" max="99" required>
+          </div>
+          <div class="input-group">
+            <label for="weight">Weight (lbs)</label>
+            <input type="number" id="weight" placeholder="Ex: 180" min="90" max="440" required>
+          </div>
+          <div class="input-group">
+            <label for="height">Height (in)</label>
+            <input type="number" id="height" placeholder="Ex: 70" min="55" max="85" required>
+          </div>
+          <div class="input-group">
+            <label for="goal">Goal</label>
+            <select id="goal" required>
+              <option value="">Select</option>
+              <option value="performance">Performance & Libido</option>
+              <option value="vitality">Vitality & Wellness</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn-calculate">Calculate Ideal Routine</button>
+      </form>
+    </div>
+
+    <!-- Result -->
+    <div class="result" id="result">
+      <h2>Your Personalized Routine</h2>
+      <div class="result-content" id="result-content"></div>
+    </div>
+
+    <!-- Action Cards -->
+    <div class="action-cards">
+      <a href="lembretes.html" class="card">
+        <div class="card-icon">⏰</div>
+        <div class="card-title">Daily Reminders</div>
+        <div class="card-description">Set alerts to never miss your dose</div>
+      </a>
+      <a href="dieta.html" class="card">
+        <div class="card-icon">🥗</div>
+        <div class="card-title">Diet Suggestions</div>
+        <div class="card-description">Personalized meal plan to maximize results</div>
+      </a>
+      <a href="comprar.html" class="card" style="background:linear-gradient(135deg, rgba(220,38,38,0.2) 0%, rgba(249,115,22,0.15) 100%);border:3px solid #f97316;position:relative;overflow:visible;">
+        <div style="position:absolute;top:-12px;right:-12px;background:linear-gradient(135deg,#fbbf24,#f59e0b);padding:8px 16px;border-radius:20px;color:#000;font-size:11px;font-weight:900;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(251,191,36,0.6);animation:pulse 2s ease-in-out infinite;">🔥 VIP DISCOUNT</div>
+        <div class="card-icon" style="font-size:70px;">👑</div>
+        <div class="card-title" style="font-size:22px;color:#fbbf24;">Buy Treatment</div>
+        <div class="card-description" style="color:#d1d5db;font-weight:600;">3, 6, or 9-month packages with VIP discount</div>
+      </a>
+    </div>
+    
+    <!-- Logout button at bottom -->
+    <div style="text-align:center;margin:40px 0 20px 0;padding:20px;">
+      <button id="logout-btn" style="padding:14px 32px;background:transparent;border:2px solid #dc2626;border-radius:10px;color:#dc2626;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;text-transform:uppercase;letter-spacing:1px;">Log out</button>
+    </div>
+  </div>
+
+  <script>
+    // Check authentication
+    const token = localStorage.getItem('manthor_token');
+    const user = JSON.parse(localStorage.getItem('manthor_user') || '{}');
+
+    if (!token) {
+      window.location.href = '/login.html';
+    }
+
+    // Logout function
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('manthor_token');
+      localStorage.removeItem('manthor_user');
+      window.location.href = '/login.html';
+    };
+
+    // Show user name
+    if (user.name) {
+      const welcomeMsg = document.createElement('p');
+      welcomeMsg.textContent = `Welcome, ${user.name}! 💪`;
+      welcomeMsg.style.cssText = 'color:#f97316;font-size:16px;margin-top:10px;font-weight:600;';
+      document.querySelector('.subtitle').after(welcomeMsg);
+    }
+
+    // Authenticated API
+    const API_URL = 'http://localhost:3000/api';
+
+    async function apiCall(endpoint, method = 'GET', body = null) {
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      };
+
+      if (body) {
+        options.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(`${API_URL}${endpoint}`, options);
+      
+      if (response.status === 401) {
+        localStorage.removeItem('manthor_token');
+        localStorage.removeItem('manthor_user');
+        window.location.href = '/';
+        return;
+      }
+
+      return response.json();
+    }
+
+    // Dynamic Thor effects
+    const bgEffects = document.getElementById('bg-effects');
+    
+    if (!bgEffects) {
+      console.warn('bg-effects element not found, skipping effects');
+    } else {
+      function createRune() {
+        const runes = ['ᚦ', 'ᚢ', 'ᚱ', 'ᚺ', 'ᛗ', 'ᚹ', 'ᛏ']; // apenas runas
+        const rune = document.createElement('div');
+        rune.textContent = runes[Math.floor(Math.random() * runes.length)];
+        rune.style.position = 'absolute';
+        rune.style.left = Math.random() * 90 + 5 + '%';
+        rune.style.top = Math.random() * 80 + 10 + '%';
+      rune.style.fontSize = Math.random() * 30 + 45 + 'px';
+      rune.style.color = 'rgba(220, 38, 38, 0.6)';
+      rune.style.textShadow = '0 0 20px rgba(220, 38, 38, 1), 0 0 40px rgba(220, 38, 38, 0.8)';
+      rune.style.pointerEvents = 'none';
+      rune.style.zIndex = '2';
+      rune.style.fontWeight = 'bold';
+      rune.style.animation = 'float-rune 6s ease-in-out infinite';
+      
+      bgEffects.appendChild(rune);
+      setTimeout(() => rune.remove(), 8000);
+    }
+
+    // Só runas no fundo
+    setInterval(createRune, 3500);
+    setTimeout(createRune, 1000);
+    setTimeout(createRune, 2000);
+    }
+
+    // Calculator form
+    document.addEventListener('DOMContentLoaded', function() {
+      const calcForm = document.getElementById('calc-form');
+      
+      if (calcForm) {
+        calcForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const age = parseInt(document.getElementById('age').value);
+          const weight = parseFloat(document.getElementById('weight').value);
+          const height = parseFloat(document.getElementById('height').value);
+          const goal = document.getElementById('goal').value;
+          const bmi = ((weight / (height ** 2)) * 703).toFixed(1);
+
+          let content = '';
+          
+          if (goal === 'performance') {
+            content = `
+              <strong>🎯 Goal: Performance & Libido</strong><br>
+              <strong>Your Profile:</strong> ${age} years, ${weight} lbs, ${height} in, BMI ${bmi}<br><br>
+              <strong>📋 Recommendation:</strong> Maximum boost for sexual performance, virile energy, and endurance.<br><br>
+              <strong>💊 ManThor Supplementation:</strong>
+              <ul>
+                <li><strong>ManThor</strong> (Libido Supplement): <strong>20 sublingual drops</strong></li>
+                <li><strong>Ideal timing:</strong> 30-45 minutes before intimate moments</li>
+                <li><strong>Frequency:</strong> As needed (up to 2x per day)</li>
+                <li><strong>How to use:</strong> Apply under the tongue and hold for 30 seconds before swallowing</li>
+              </ul>
+              <strong>⚡ Optimized Performance Routine:</strong>
+              <ul>
+                <li><strong>Nutrition:</strong> Protein and zinc-rich diet (seafood, eggs, nuts)</li>
+                <li><strong>Training:</strong> Anaerobic training 3-4x/week to boost effects</li>
+                <li><strong>Hydration:</strong> Maintain 3-4L of water per day</li>
+                <li><strong>Sleep:</strong> Get 7-8h for hormonal recovery</li>
+              </ul>
+              <strong>📊 Expected Results:</strong> Immediate libido increase (15-30 min after application), virile energy, enhanced sexual performance, and increased confidence.
+            `;
+          } else {
+            content = `
+              <strong>🎯 Goal: Vitality & Wellness</strong><br>
+              <strong>Your Profile:</strong> ${age} years, ${weight} lbs, ${height} in, BMI ${bmi}<br><br>
+              <strong>📋 Recommendation:</strong> Balanced routine for overall health, constant vitality, and total wellness.<br><br>
+              <strong>💊 ManThor Supplementation:</strong>
+              <ul>
+                <li><strong>ManThor</strong> (Vitality): <strong>20 sublingual drops</strong></li>
+                <li><strong>Ideal timing:</strong> Morning (7-8am) with breakfast</li>
+                <li><strong>Frequency:</strong> Daily for cumulative effect</li>
+                <li><strong>How to use:</strong> Apply under the tongue and hold for 30 seconds</li>
+              </ul>
+              <strong>⚡ Healthy Vitality Routine:</strong>
+              <ul>
+                <li><strong>Morning:</strong> ManThor 20 drops + Complete breakfast (eggs, oats, fruit)</li>
+                <li><strong>Afternoon:</strong> 30-45 min walk, workout or yoga</li>
+                <li><strong>Evening:</strong> Light meal, 2h before sleep</li>
+                <li><strong>Sleep:</strong> 7-8h per night for recovery</li>
+                <li><strong>Hydration:</strong> 3-4L of water throughout the day</li>
+              </ul>
+              <strong>📊 Benefits:</strong> Constant energy, improved mood, higher physical and mental endurance, enhanced libido, better quality of life.
+            `;
+          }
+
+          const resultDiv = document.getElementById('result');
+          document.getElementById('result-content').innerHTML = content;
+          resultDiv.style.display = 'block';
+          resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

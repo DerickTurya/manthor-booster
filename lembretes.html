@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Daily Reminders - ManThor</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .reminder-app { max-width:720px; margin:28px auto; padding:18px; }
+    .reminder-row { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+    .reminders-list { margin-top:12px; }
+    .reminder-item { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(220,38,38,0.06); }
+    .btn { background:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%); color:#fff; padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:800; }
+    .btn.secondary { background:transparent; border:1px solid rgba(249,115,22,0.9); color:#f97316; }
+    .note { font-size:13px; color:#d1d5db; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="logo-container">
+        <div class="viking-badge">
+          <div class="flag-backdrop">🇺🇸</div>
+          <div class="viking-icon">⏰</div>
+        </div>
+        <h1 class="app-title">Reminders - ManThor</h1>
+      </div>
+      <p class="hero-title">Schedule reminders to use your supplement</p>
+    </header>
+
+    <div class="reminder-app">
+      <div class="reminder-row">
+        <input id="reminder-time" type="time" />
+        <input id="reminder-label" type="text" placeholder="Ex: Take ManThor" style="flex:1;padding:10px;border-radius:8px;border:2px solid rgba(220,38,38,0.2);background:rgba(10,10,10,0.6);color:#fff;font-weight:700;">
+        <label style="display:flex;align-items:center;gap:6px;color:#d1d5db;margin-left:8px;"><input id="repeat-daily" type="checkbox"> Repeat daily</label>
+        <button id="schedule-btn" class="btn">Schedule</button>
+      </div>
+      
+      <!-- Availability and AI -->
+      <div style="margin-top:12px;padding:10px;border-radius:8px;border:1px solid rgba(220,38,38,0.06);background:rgba(255,255,255,0.01);">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <label style="color:#d1d5db;font-weight:700;">Availability:</label>
+          <label style="color:#d1d5db"><input type="checkbox" id="avail-morning"> Morning</label>
+          <label style="color:#d1d5db"><input type="checkbox" id="avail-afternoon"> Afternoon</label>
+          <label style="color:#d1d5db"><input type="checkbox" id="avail-evening"> Evening</label>
+          <button id="suggest-btn" class="btn" style="margin-left:auto;">Suggest Best Time (AI)</button>
+        </div>
+        <div style="margin-top:8px;color:#9ca3af;font-size:13px;">The AI suggests a time based on your chosen availability, avoiding conflicts with existing reminders.</div>
+      </div>
+      <div class="note">When scheduled, the browser will attempt to send a notification at the time. Allow notifications when prompted.</div>
+      
+      <div style="margin-top:12px;padding:10px;border-radius:8px;border:1px solid rgba(249,115,22,0.3);background:rgba(249,115,22,0.05);">
+        <button id="test-notification" class="btn" style="width:100%;">🔔 Test Notification Now</button>
+        <div style="margin-top:6px;color:#9ca3af;font-size:12px;text-align:center;">Click to test if notifications are working correctly</div>
+      </div>
+      
+      <div class="reminders-list" id="reminders-list"></div>
+
+      <p style="margin-top:18px;"><a href="index.html" class="btn secondary">← Back to Main</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Enhanced reminder system with reliable notifications
+    (function(){
+      const scheduleBtn = document.getElementById('schedule-btn');
+      const timeInput = document.getElementById('reminder-time');
+      const labelInput = document.getElementById('reminder-label');
+      const listEl = document.getElementById('reminders-list');
+
+      const STORAGE_KEY = 'manthor_reminders_v1';
+      let reminders = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      let timers = {};
+      let checkInterval = null;
+      
+      // Register service worker for notifications
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          console.log('ServiceWorker registered', reg.scope);
+        }).catch(e => console.warn('sw register failed', e));
+      }
+
+      function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders)); }
+
+      function render() {
+        listEl.innerHTML = '';
+        reminders.forEach(r => {
+          const el = document.createElement('div'); el.className = 'reminder-item';
+          const left = document.createElement('div'); left.innerHTML = `<strong>${r.label}</strong><div style="font-size:12px;color:#d1d5db;">${new Date(r.time).toLocaleString()}</div>`;
+          const right = document.createElement('div');
+          const cancel = document.createElement('button'); cancel.className='btn secondary'; cancel.textContent='Cancelar';
+          cancel.onclick = () => { cancelReminder(r.id); };
+          right.appendChild(cancel);
+          el.appendChild(left); el.appendChild(right);
+          listEl.appendChild(el);
+        });
+      }
+
+      function scheduleReminder(reminder) {
+        const now = Date.now();
+        let delay = reminder.time - now;
+        if (delay <= 0) {
+          // if repeating, schedule for next day at same hour
+          if (reminder.repeat) {
+            reminder.time = reminder.time + 24 * 60 * 60 * 1000;
+            delay = reminder.time - now;
+            save();
+          } else {
+            return; // past and not repeating
+          }
+        }
+        if (timers[reminder.id]) clearTimeout(timers[reminder.id]);
+        timers[reminder.id] = setTimeout(() => {
+          notify(reminder);
+          // if repeating, reschedule for next day; otherwise remove
+          if (reminder.repeat) {
+            reminder.time = reminder.time + 24 * 60 * 60 * 1000;
+            save(); render();
+            scheduleReminder(reminder);
+          } else {
+            reminders = reminders.filter(x => x.id !== reminder.id);
+            save(); render();
+          }
+        }, delay);
+      }
+
+      async function notify(reminder) {
+        const title = '⏰ ManThor Reminder';
+        const body = reminder.label || 'Time to take your ManThor supplement!';
+        
+        console.log('🔔 Triggering notification:', title, body);
+
+        // Play sound alert
+        playNotificationSound();
+
+        // Vibrate if supported
+        try { 
+          if (navigator.vibrate) {
+            navigator.vibrate([300, 100, 300, 100, 300]);
+          }
+        } catch(e){}
+
+        // Show notification
+        try {
+          if ('serviceWorker' in navigator) {
+            const reg = await navigator.serviceWorker.getRegistration();
+            if (reg && reg.showNotification) {
+              await reg.showNotification(title, { 
+                body, 
+                tag: 'manthor-' + reminder.id, 
+                renotify: true,
+                requireInteraction: true,
+                icon: '/icon-192.png',
+                badge: '/icon-72.png',
+                vibrate: [300, 100, 300, 100, 300]
+              });
+            } else if (window.Notification && Notification.permission === 'granted') {
+              new Notification(title, { body, requireInteraction: true });
+            } else {
+              alert('⏰ ' + body);
+            }
+          } else if (window.Notification && Notification.permission === 'granted') {
+            new Notification(title, { body, requireInteraction: true });
+          } else {
+            alert('⏰ ' + body);
+          }
+        } catch (e) {
+          console.warn('Notification failed:', e);
+          alert('⏰ ' + body);
+        }
+      }
+
+      function playNotificationSound() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          
+          // Play a pleasant notification tone (3 beeps)
+          function beep(freq, startTime, duration) {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'sine';
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0, startTime);
+            g.gain.linearRampToValueAtTime(0.1, startTime + 0.01);
+            g.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(startTime);
+            o.stop(startTime + duration);
+          }
+          
+          const now = ctx.currentTime;
+          beep(880, now, 0.15);
+          beep(988, now + 0.2, 0.15);
+          beep(1047, now + 0.4, 0.2);
+          
+          setTimeout(() => { try { ctx.close(); } catch(e){} }, 1000);
+        } catch(e) {
+          console.warn('Audio failed:', e);
+        }
+      }
+
+      function cancelReminder(id) {
+        if (timers[id]) { clearTimeout(timers[id]); delete timers[id]; }
+        reminders = reminders.filter(x => x.id !== id);
+        save(); render();
+      }
+
+      function ensurePermissionThen(cb) {
+        if (!('Notification' in window)) { cb(false); return; }
+        if (Notification.permission === 'granted') return cb(true);
+        Notification.requestPermission().then(p => cb(p === 'granted'));
+      }
+
+      scheduleBtn.addEventListener('click', () => {
+        const time = timeInput.value; const label = labelInput.value || 'Take ManThor';
+        const repeat = document.getElementById('repeat-daily').checked;
+        if (!time) { alert('Choose a time'); return; }
+        const [hh, mm] = time.split(':').map(Number);
+        const now = new Date();
+        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm, 0, 0);
+        if (target.getTime() <= now.getTime()) {
+          // schedule for next day
+          target.setDate(target.getDate() + 1);
+        }
+        const reminder = { id: Date.now().toString(36), time: target.getTime(), label, repeat: !!repeat };
+        ensurePermissionThen(granted => {
+          reminders.push(reminder); save(); render(); scheduleReminder(reminder);
+          labelInput.value = '';
+          timeInput.value = '';
+          document.getElementById('repeat-daily').checked = false;
+          if (!granted) alert('Notifications not allowed. You will receive an alert on the current tab while this page is open. For reliable background notifications, install the app as a PWA or enable Push notifications (requires a server).');
+        });
+      });
+
+      // Simple AI: suggests best time based on availability
+      const suggestBtn = document.getElementById('suggest-btn');
+      function withinMinutes(a, b, minutes) {
+        return Math.abs(a - b) <= minutes * 60 * 1000;
+      }
+
+      function pickFromWindow(windowKey) {
+        // preferences by window (typical times)
+        const prefs = {
+          morning: [8, 9, 10],
+          afternoon: [12, 13, 14, 15],
+          evening: [18, 19, 20, 21]
+        };
+        return prefs[windowKey] || [12];
+      }
+
+      function suggestTimeBasedOnAvailability() {
+        // load availability
+        const morning = document.getElementById('avail-morning').checked;
+        const afternoon = document.getElementById('avail-afternoon').checked;
+        const evening = document.getElementById('avail-evening').checked;
+
+        const now = new Date();
+        const windows = [];
+        if (morning) windows.push('morning');
+        if (afternoon) windows.push('afternoon');
+        if (evening) windows.push('evening');
+
+        // if nothing chosen, suggest next convenient time (next available hour)
+        if (windows.length === 0) {
+          const candidate = new Date(now.getTime() + 60 * 60 * 1000);
+          candidate.setMinutes(0,0,0);
+          return candidate;
+        }
+
+        // generate candidates for next 48 hours for selected windows
+        const candidates = [];
+        for (let dayOffset = 0; dayOffset < 2; dayOffset++) {
+          const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset);
+          for (const w of windows) {
+            const hrs = pickFromWindow(w);
+            for (const h of hrs) {
+              const cand = new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, 0, 0, 0);
+              if (cand.getTime() <= now.getTime()) continue; // past
+              candidates.push(cand);
+            }
+          }
+        }
+
+        // sort candidates
+        candidates.sort((a,b) => a - b);
+
+        // avoid conflicts: ensure candidate is at least 45 minutes from any existing reminder
+        for (const c of candidates) {
+          let conflict = false;
+          for (const r of reminders) {
+            if (withinMinutes(c.getTime(), r.time, 45)) { conflict = true; break; }
+          }
+          if (!conflict) return c;
+        }
+
+        // if no candidate without conflict, return first candidate (less bad)
+        return candidates[0] || new Date(now.getTime() + 60*60*1000);
+      }
+
+      if (suggestBtn) {
+        suggestBtn.addEventListener('click', () => {
+          const suggested = suggestTimeBasedOnAvailability();
+          if (!suggested) { alert('Could not suggest a time'); return; }
+          const hh = String(suggested.getHours()).padStart(2,'0');
+          const mm = String(suggested.getMinutes()).padStart(2,'0');
+          const timeStr = `${hh}:${mm}`;
+          timeInput.value = timeStr;
+          labelInput.value = 'Take ManThor';
+          // ask if user wants to schedule now
+          if (confirm(`AI suggests ${timeStr}. Schedule now?`)) {
+            scheduleBtn.click();
+          }
+        });
+      }
+
+      // Test notification button
+      const testBtn = document.getElementById('test-notification');
+      if (testBtn) {
+        testBtn.addEventListener('click', () => {
+          ensurePermissionThen(granted => {
+            if (granted) {
+              notify({ 
+                id: 'test-' + Date.now(), 
+                label: 'This is a test notification! If you see this, notifications are working correctly. 🎉',
+                time: Date.now()
+              });
+              alert('✅ Test notification sent! Check your notifications.');
+            } else {
+              alert('❌ Notification permission denied. Please enable notifications in your browser settings.');
+            }
+          });
+        });
+      }
+
+      // Request permission proactively (nice UX on mobile apps)
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(p => {
+          console.log('Notification permission:', p);
+          if (p === 'granted') {
+            console.log('✅ Notifications enabled');
+          } else {
+            console.warn('⚠️ Notifications denied or dismissed');
+          }
+        });
+      }
+
+      // Periodic check every 30 seconds to ensure reminders fire even if setTimeout fails
+      function checkReminders() {
+        const now = Date.now();
+        reminders.forEach(r => {
+          if (r.time <= now && r.time > (now - 60000)) { // within last minute
+            console.log('⏰ Firing missed/pending reminder:', r.label);
+            notify(r);
+            
+            if (r.repeat) {
+              // Schedule for next day
+              const dt = new Date(r.time);
+              const next = new Date();
+              next.setDate(next.getDate() + 1);
+              next.setHours(dt.getHours(), dt.getMinutes(), 0, 0);
+              r.time = next.getTime();
+              save();
+              scheduleReminder(r);
+            } else {
+              // Remove one-time reminder
+              cancelReminder(r.id);
+            }
+          }
+        });
+      }
+
+      // on load, render and schedule pending (reschedule repeating reminders)
+      (function initSchedule(){
+        const now = Date.now();
+        reminders = reminders.filter(r => {
+          if (!r) return false;
+          if (r.time && r.time > now) return true;
+          if (r.repeat && r.time) {
+            // compute next occurrence at same hour/min
+            const dt = new Date(r.time);
+            const next = new Date();
+            next.setHours(dt.getHours(), dt.getMinutes(), 0, 0);
+            if (next.getTime() <= now) next.setDate(next.getDate() + 1);
+            r.time = next.getTime();
+            return true;
+          }
+          return false;
+        });
+        save();
+        reminders.forEach(r => scheduleReminder(r));
+        render();
+        
+        // Start periodic check every 30 seconds
+        if (checkInterval) clearInterval(checkInterval);
+        checkInterval = setInterval(checkReminders, 30000);
+        
+        console.log('✅ Reminder system initialized. Active reminders:', reminders.length);
+      })();
+
+      // Keep page alive by preventing idle (optional, for testing)
+      if ('wakeLock' in navigator) {
+        let wakeLock = null;
+        async function requestWakeLock() {
+          try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('Wake Lock active');
+          } catch (err) {
+            console.log('Wake Lock error:', err);
+          }
+        }
+        // Uncomment to keep screen awake while reminders are active
+        // requestWakeLock();
+      }
+    })();
+  </script>
+</body>
+</html>

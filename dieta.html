@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Diet Suggestions - ManThor</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .diet-section { max-width:900px; margin:20px auto; padding:24px; background:linear-gradient(135deg,rgba(26,26,26,0.95),rgba(20,20,20,0.95)); border:2px solid rgba(220,38,38,0.2); border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.6); }
+    .meal { margin-bottom:20px; padding:16px; background:rgba(26,26,26,0.8); border-left:4px solid #f97316; border-radius:10px; transition:all 0.3s; }
+    .meal:hover { transform:translateX(5px); border-left-width:6px; box-shadow:0 5px 20px rgba(249,115,22,0.2); }
+    .meal h4 { margin:0 0 10px 0; color:#f97316; font-size:16px; font-weight:700; letter-spacing:0.5px; }
+    .meal p { margin:6px 0; color:#d1d5db; font-size:14px; line-height:1.6; }
+    .meal strong { color:#fff; }
+    ul { margin:8px 0; padding-left:24px; }
+    li { margin:6px 0; color:#d1d5db; font-size:14px; }
+    .generator-box { background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(249,115,22,0.05)); border:2px solid rgba(220,38,38,0.3); padding:20px; border-radius:12px; margin-bottom:20px; }
+    .input-group { display:flex; flex-direction:column; gap:6px; }
+    .input-group label { color:#f97316; font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:1px; }
+    .input-group input, .input-group select { padding:10px; background:rgba(10,10,10,0.8); border:2px solid rgba(220,38,38,0.3); border-radius:8px; color:#fff; font-size:15px; transition:all 0.3s; }
+    .input-group input:focus, .input-group select:focus { outline:none; border-color:#f97316; box-shadow:0 0 15px rgba(249,115,22,0.3); }
+    .btn-generate { width:100%; padding:14px; background:linear-gradient(135deg,#dc2626,#b91c1c); border:2px solid #f97316; border-radius:10px; color:#fff; font-size:16px; font-weight:700; text-transform:uppercase; cursor:pointer; transition:all 0.3s; letter-spacing:1px; }
+    .btn-generate:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(220,38,38,0.5); }
+    .macro-card { background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3); border-radius:10px; padding:12px; margin:10px 0; display:inline-block; }
+    .macro-card strong { color:#f97316; font-size:18px; }
+    #extra-goals-controls label { text-decoration:none; }
+    #gen-goal option { text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="logo-container">
+        <div class="viking-badge">
+          <div class="flag-backdrop">🇺🇸</div>
+          <div class="viking-icon">🥗</div>
+        </div>
+        <h1 class="app-title">Diet Suggestions</h1>
+      </div>
+      <p class="hero-title">Nutritional plans to maximize your supplement</p>
+    </header>
+
+    <div class="diet-section">
+      <h2 style="color:#f97316;font-size:16px;letter-spacing:1px;text-transform:uppercase;margin:0 0 16px 0;">Complete Nutritional Plan</h2>
+      <!-- Personalized result placeholder (populated when user calculates routine) -->
+      <div id="personalized-result" style="margin-bottom:14px;color:#d1d5db;"></div>
+
+      <div id="static-plan" style="display:none;">
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">🌅 Breakfast (07:00-08:00)</h3>
+      <div class="meal">
+        <h4>Option 1 - Performance (Muscle Gain)</h4>
+        <ul>
+          <li>3 whole eggs + 2 egg whites (protein)</li>
+          <li>1 cup cooked oatmeal with cinnamon</li>
+          <li>1 banana + 1 tablespoon honey</li>
+          <li>200ml fresh orange juice</li>
+        </ul>
+        <p><strong>Macros:</strong> ~50g protein, 60g carbs, 15g fat</p>
+      </div>
+      <div class="meal">
+        <h4>Option 2 - Energy (More Disposition)</h4>
+        <ul>
+          <li>200g Greek yogurt (unsweetened)</li>
+          <li>100g homemade granola with nuts</li>
+          <li>1 cup red fruits (blackberry, strawberry)</li>
+          <li>1 tablespoon honey</li>
+        </ul>
+        <p><strong>Macros:</strong> ~35g protein, 50g carbs, 12g fat</p>
+      </div>
+
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">☀️ Mid-Morning Snack (10:00)</h3>
+      <div class="meal">
+        <h4>Recommended Option</h4>
+        <ul>
+          <li>1 apple + 2 tablespoons natural peanut butter</li>
+          <li>Or: Mix of nuts (20g) + 1 medium orange</li>
+          <li>Hydration: 500ml water with lemon</li>
+        </ul>
+        <p><strong>Goal:</strong> Avoid hunger spikes and maintain steady energy</p>
+      </div>
+
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">🍽️ Lunch (12:00-13:00)</h3>
+      <div class="meal">
+        <h4>Option 1 - Maximum Strength</h4>
+        <ul>
+          <li>200g grilled chicken breast or 200g salmon</li>
+          <li>1 cup cooked brown rice</li>
+          <li>1 medium sweet potato (cooked or baked)</li>
+          <li>Green salad + olive oil + lemon</li>
+        </ul>
+        <p><strong>Macros:</strong> ~50g protein, 65g carbs, 8g fat</p>
+      </div>
+      <div class="meal">
+        <h4>Option 2 - Variation</h4>
+        <ul>
+          <li>200g lean meat or eggs</li>
+          <li>1 cup whole wheat pasta</li>
+          <li>Natural tomato sauce with broccoli</li>
+          <li>1 tablespoon olive oil</li>
+        </ul>
+        <p><strong>Macros:</strong> ~45g protein, 60g carbs, 10g fat</p>
+      </div>
+
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">🥤 Pre-Workout Snack (16:00) - If Training at Night</h3>
+      <div class="meal">
+        <h4>Pre-Workout Energizer</h4>
+        <ul>
+          <li>1 banana + 1 tablespoon peanut butter</li>
+          <li>Or: 1 homemade protein bar</li>
+          <li>500ml water with natural electrolytes (coconut)</li>
+        </ul>
+        <p><strong>Goal:</strong> Energy for training without digestive discomfort</p>
+      </div>
+
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">💪 Post-Workout (Up to 30 min after finishing)</h3>
+      <div class="meal">
+        <h4>Muscle Recovery</h4>
+        <ul>
+          <li>200ml natural juice (orange or watermelon)</li>
+          <li>1 scoop protein powder (or 2 egg whites + 1 banana)</li>
+          <li>30g maltodextrin or honey</li>
+        </ul>
+        <p><strong>Goal:</strong> Recovery and maximum protein synthesis</p>
+      </div>
+
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">🌙 Dinner (19:00-20:00)</h3>
+      <div class="meal">
+        <h4>Option 1 - Balanced</h4>
+        <ul>
+          <li>180g white fish (tilapia, shark) or eggs</li>
+          <li>1 cup cooked potato</li>
+          <li>Salad with grated squash and carrot</li>
+          <li>1 tablespoon olive oil</li>
+        </ul>
+        <p><strong>Macros:</strong> ~40g protein, 45g carbs, 7g fat</p>
+      </div>
+      <div class="meal">
+        <h4>Option 2 - Lighter</h4>
+        <ul>
+          <li>150g chicken breast or 3 eggs</li>
+          <li>Varied vegetables (broccoli, carrot, squash)</li>
+          <li>1 small portion of brown rice</li>
+        </ul>
+        <p><strong>Macros:</strong> ~38g protein, 35g carbs, 5g fat</p>
+      </div>
+
+      <h3 style="color:#dc2626;font-size:14px;margin:16px 0 10px 0;">🌙 Optional Evening Snack (20:30)</h3>
+      <div class="meal">
+        <h4>If needed</h4>
+        <ul>
+          <li>200ml skim milk + 1 tablespoon oatmeal</li>
+          <li>Or: 100g cottage cheese + honey</li>
+          <li>Goal: Avoid catabolism during sleep</li>
+        </ul>
+      </div>
+
+      <h3 style="color:#f97316;font-size:14px;margin:20px 0 10px 0;">📋 Important Tips</h3>
+      <div style="background:rgba(249,115,22,0.05);padding:12px;border-radius:8px;color:#d1d5db;font-size:13px;">
+        <ul>
+          <li><strong>Hydration:</strong> Drink 3-4L of water daily, spread throughout the day</li>
+          <li><strong>Supplementation:</strong> Combine with ManThor according to your personalized routine</li>
+          <li><strong>Consistency:</strong> The diet works when combined with regular training and adequate sleep</li>
+          <li><strong>Adjustments:</strong> If gaining weight too fast, reduce one snack. If losing, increase meals</li>
+          <li><strong>Rest days:</strong> Even on non-training days, maintain protein intake</li>
+          <li><strong>Avoid:</strong> Excess alcohol, ultra-processed foods, sodas, fried foods</li>
+        </ul>
+      </div>
+
+      <p style="margin-top:20px;text-align:center;"><a href="index.html" style="color:#f97316;text-decoration:none;font-weight:700;border:1px solid #f97316;padding:8px 16px;border-radius:8px;">← Back to Calculator</a></p>
+      </div>
+    </div>
+  </div>
+    <script>
+      
+      // On load: if user already calculated a routine show it; otherwise show a small diet generator (male-focused)
+      (function(){
+        const container = document.getElementById('personalized-result');
+        if (!container) return;
+
+        function goalLabel(key) {
+          if (!key) return '';
+          const map = {
+            'gain_mass': 'Gain Mass',
+            'lose_weight': 'Lose Weight',
+            'definition': 'Definition',
+            'vitality': 'Vitality'
+          };
+          return map[key] || String(key).replace(/_/g, ' ');
+        }
+
+        function renderStored(data) {
+          const inputs = data.inputs || {};
+          const profile = `<div style="background:linear-gradient(135deg,rgba(26,26,26,0.9),rgba(20,20,20,0.9));border:1px solid rgba(220,38,38,0.08);padding:12px;border-radius:10px;margin-bottom:8px;"><strong>Personalized Routine (Based on your inputs)</strong><div style="font-size:13px;color:#d1d5db;margin-top:6px;">Age: ${inputs.age || '-'} • Weight: ${inputs.weight || '-'}kg • Height: ${inputs.height || '-'}cm • Goal: ${inputs.goal ? goalLabel(inputs.goal) : '-'}</div></div>`;
+          const routineHtml = data.routineHtml || '';
+          let dietHtml = data.dietHtml || '';
+
+          // If user provided additional goals when viewing the routine, append tailored sections for each
+          try {
+              const extra = (inputs.additionalGoals && Array.isArray(inputs.additionalGoals)) ? inputs.additionalGoals : [];
+              if (extra.length > 0) {
+                // render a single merged diet for all goals
+                dietHtml += generateMergedDiet(extra, inputs.weight || null, inputs.height || null);
+              }
+          } catch(e) { /* ignore */ }
+
+          const backHtml = '<div style="margin-top:14px;text-align:center;"><a href="index.html" style="color:#111827;background:#f97316;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none;">Back to Main Menu</a></div>';
+          container.innerHTML = profile + '<div>' + routineHtml + '</div>' + '<div style="margin-top:10px;">' + dietHtml + '</div>' + backHtml;
+          container.scrollIntoView({behavior:'smooth', block:'start'});
+          try { const sp = document.getElementById('static-plan'); if (sp) sp.style.display = 'none'; } catch(e){}
+        }
+
+        function generateDietLocal(goal, weight, height) {
+          // male-focused heuristic templates with English goal keys
+          // compute BMI-based portion guidance
+          let portionAdvice = '';
+          if (weight && height) {
+            const bmi = weight / ((height/100) ** 2);
+            if (bmi < 20) portionAdvice = '<p><strong>Portion advice:</strong> BMI indicates underweight — consider increasing portion sizes (~+10%).</p>';
+            else if (bmi >= 25) portionAdvice = '<p><strong>Portion advice:</strong> BMI indicates overweight — consider reducing portion sizes (~-10% to -15%) and favor lean proteins.</p>';
+            else portionAdvice = '<p><strong>Portion advice:</strong> BMI in normal range — maintain balanced portions tuned to activity level.</p>';
+          }
+
+          if (goal === 'gain_mass') {
+            return `
+              <h3 style="color:#f97316;margin-top:6px;">Personalized Diet — Gain Mass (Men)</h3>
+              <p>Plan focused on men aiming to increase muscle mass and strength.</p>
+              <ul style="margin:6px 0 12px 20px;">
+                <li><strong>Breakfast:</strong> 3 eggs + oats + banana</li>
+                <li><strong>Mid-morning:</strong> Greek yogurt + mixed nuts</li>
+                <li><strong>Lunch:</strong> 200g grilled chicken/salmon, brown rice, salad</li>
+                <li><strong>Pre-workout:</strong> Banana + peanut butter</li>
+                <li><strong>Post-workout:</strong> Protein shake + quick carbs</li>
+                <li><strong>Dinner:</strong> Lean protein + vegetables</li>
+              </ul>
+              <p><strong>Notes:</strong> Prioritize protein, zinc-rich foods and healthy fats; hydrate 3-4L/day.</p>
+              ${portionAdvice}
+            `;
+          }
+
+          if (goal === 'lose_weight' || goal === 'definition') {
+            return `
+              <h3 style="color:#f97316;margin-top:6px;">Personalized Diet — Lose Weight / Definition (Men)</h3>
+              <p>Plan focused on reducing body fat while preserving lean mass.</p>
+              <ul style="margin:6px 0 12px 20px;">
+                <li><strong>Breakfast:</strong> Egg-white omelette + smaller portion of oats</li>
+                <li><strong>Mid-morning:</strong> Low-sugar fruit + a few nuts</li>
+                <li><strong>Lunch:</strong> Lean protein, large salad, moderate complex carbs</li>
+                <li><strong>Pre-workout:</strong> Controlled carb (small banana)</li>
+                <li><strong>Post-workout:</strong> Fast protein + minimal sugars</li>
+                <li><strong>Dinner:</strong> White fish + steamed vegetables</li>
+              </ul>
+              <p><strong>Notes:</strong> Create a moderate calorie deficit, prioritize protein and vegetables; avoid fried and ultra-processed foods.</p>
+              ${portionAdvice}
+            `;
+          }
+
+          // default: vitality
+          return `
+            <h3 style="color:#f97316;margin-top:6px;">Personalized Diet — Vitality (Men)</h3>
+            <p>Plan for men seeking daily energy, mood and overall well-being.</p>
+            <ul style="margin:6px 0 12px 20px;">
+              <li><strong>Breakfast:</strong> Oatmeal + fruit + Greek yogurt</li>
+              <li><strong>Mid-morning:</strong> Apple + handful of nuts</li>
+              <li><strong>Lunch:</strong> Lean protein + complex carbs + greens</li>
+              <li><strong>Afternoon:</strong> Light snack and 30-45 min activity</li>
+              <li><strong>Dinner:</strong> Light meal with protein and vegetables</li>
+            </ul>
+            <p><strong>Notes:</strong> Morning ManThor dosing recommended for cumulative benefits; prioritize sleep and hydration.</p>
+            ${portionAdvice}
+          `;
+        }
+
+        // Generate a single merged diet when multiple goals are selected
+        function generateMergedDiet(goals, weight, height) {
+          const set = new Set(goals || []);
+          const hasGain = set.has('gain_mass');
+          const hasLose = set.has('lose_weight');
+          const hasDef = set.has('definition');
+
+          // BMI-based portion advice
+          let portionAdvice = '';
+          if (weight && height) {
+            const bmi = weight / ((height/100) ** 2);
+            if (bmi < 20) portionAdvice = '<p><strong>Portion advice:</strong> BMI indicates underweight — consider increasing portion sizes (~+10%).</p>';
+            else if (bmi >= 25) portionAdvice = '<p><strong>Portion advice:</strong> BMI indicates overweight — consider reducing portion sizes (~-10% to -15%) and favor lean proteins.</p>';
+            else portionAdvice = '<p><strong>Portion advice:</strong> BMI in normal range — maintain balanced portions tuned to activity level.</p>';
+          }
+
+          // If only one goal, just reuse existing local generator
+          if (set.size === 1) {
+            const only = Array.from(set)[0];
+            return generateDietLocal(only, weight, height);
+          }
+
+          // If conflicting goals (gain + lose) => offer a recomposition plan
+          if (hasGain && hasLose) {
+            return `
+              <h3 style="color:#f97316;margin-top:6px;">Personalized Diet — Recomposition (Men)</h3>
+              <p>Balanced recomposition plan to preserve/build lean mass while improving body composition.</p>
+              <ul style="margin:6px 0 12px 20px;">
+                <li><strong>Breakfast:</strong> 2 whole eggs + 2 egg whites, small portion oatmeal</li>
+                <li><strong>Mid-morning:</strong> Greek yogurt + a small handful of nuts</li>
+                <li><strong>Lunch:</strong> 180–200g lean protein, moderate complex carbs (brown rice/sweet potato), large salad</li>
+                <li><strong>Pre-workout:</strong> Small carb (banana) + coffee</li>
+                <li><strong>Post-workout:</strong> Protein shake + fast carbs (fruit) to support recovery</li>
+                <li><strong>Dinner:</strong> Lean protein + lots of vegetables, reduced starchy carbs</li>
+              </ul>
+              <p><strong>Notes:</strong> Use slight calorie cycling (small surplus on training days, slight deficit on rest days). Prioritize protein distribution and progressive overload training.</p>
+              ${portionAdvice}
+            `;
+          }
+
+          // Otherwise merge priorities into a full per-meal plan
+          const readableNames = Array.from(set).map(g => goalLabel(g));
+          const title = Array.from(set).length > 1 ? 'Combined Plan' : (readableNames[0] || 'Plan');
+          let out = `<h3 style="color:#f97316;margin-top:6px;">Personalized Diet — ${title} (Men)</h3>`;
+          out += `<p>Plan combining selected goals: ${readableNames.join(', ')}</p>`;
+
+          // Breakfast
+          out += `<h4 style="color:#f97316;margin-top:8px;">Breakfast</h4><ul style="margin:6px 0 12px 20px;">`;
+          if (hasGain) out += '<li>3 whole eggs + oats + banana</li>';
+          if (hasLose) out += '<li>Egg-white omelette + smaller portion of oats</li>';
+          if (!hasGain && !hasLose) out += '<li>Oatmeal + fruit + Greek yogurt</li>';
+          out += '</ul>';
+
+          // Mid-morning
+          out += `<h4 style="color:#f97316;margin-top:6px;">Mid-morning</h4><ul style="margin:6px 0 12px 20px;">`;
+          out += '<li>Greek yogurt + mixed nuts or a piece of fruit</li>';
+          out += '</ul>';
+
+          // Lunch
+          out += `<h4 style="color:#f97316;margin-top:6px;">Lunch</h4><ul style="margin:6px 0 12px 20px;">`;
+          if (hasGain) out += '<li>200g grilled chicken or salmon, brown rice, salad</li>';
+          if (hasLose) out += '<li>Lean protein, large salad, moderate complex carbs</li>';
+          if (!hasGain && !hasLose) out += '<li>Lean protein + complex carbs + greens</li>';
+          out += '</ul>';
+
+          // Pre-workout
+          out += `<h4 style="color:#f97316;margin-top:6px;">Pre-workout</h4><ul style="margin:6px 0 12px 20px;">`;
+          out += '<li>Small carb (banana) + a little peanut butter</li>';
+          out += '</ul>';
+
+          // Post-workout
+          out += `<h4 style="color:#f97316;margin-top:6px;">Post-workout</h4><ul style="margin:6px 0 12px 20px;">`;
+          out += '<li>Protein shake + quick carbs (fruit)</li>';
+          out += '</ul>';
+
+          // Dinner
+          out += `<h4 style="color:#f97316;margin-top:6px;">Dinner</h4><ul style="margin:6px 0 12px 20px;">`;
+          if (hasLose) out += '<li>White fish or lean protein + steamed vegetables</li>';
+          else out += '<li>Lean protein + vegetables (moderate carbs)</li>';
+          out += '</ul>';
+
+          // Evening snack
+          out += `<h4 style="color:#f97316;margin-top:6px;">Evening Snack (optional)</h4><ul style="margin:6px 0 12px 20px;">`;
+          out += '<li>100g cottage cheese or 200ml skim milk + oatmeal</li>';
+          out += '</ul>';
+
+          out += `<p><strong>Notes:</strong> Prioritize protein distribution, sleep and hydration. ${portionAdvice}</p>`;
+          return out;
+        }
+
+        // Load both stored generated diets and calculated routines (separate keys)
+        try {
+          const rawGen = localStorage.getItem('manthor_generated_diet');
+          const rawLast = localStorage.getItem('manthor_last_result');
+          const genData = rawGen ? JSON.parse(rawGen) : null;
+          const lastData = rawLast ? JSON.parse(rawLast) : null;
+
+          const hasGen = genData && genData.dietHtml;
+          const hasRoutine = lastData && lastData.routineHtml;
+
+          // If there's a generated diet, show it. If routine exists too, show it as a complement above.
+          if (hasGen || hasRoutine) {
+            let html = '';
+
+            // show routine if present
+            if (hasRoutine) {
+              const inputs = lastData.inputs || {};
+              html += `<div style="background:linear-gradient(135deg,rgba(26,26,26,0.9),rgba(20,20,20,0.9));border:1px solid rgba(220,38,38,0.08);padding:12px;border-radius:10px;margin-bottom:8px;"><strong>Personalized Routine (Based on your inputs)</strong><div style="font-size:13px;color:#d1d5db;margin-top:6px;">Age: ${inputs.age || '-'} • Weight: ${inputs.weight || '-'}kg • Height: ${inputs.height || '-'}cm • Goal: ${inputs.goal ? goalLabel(inputs.goal) : '-'}</div></div>`;
+              html += '<div>' + lastData.routineHtml + '</div>';
+            }
+
+            // Controls: when a routine exists, allow user to add extra goals to merge
+            let controlsHtml = '';
+            if (hasRoutine) {
+              const savedExtras = (lastData.inputs && Array.isArray(lastData.inputs.additionalGoals)) ? lastData.inputs.additionalGoals : [];
+              // Use radio buttons so only one extra goal can be selected at a time
+              controlsHtml = `
+                <div id="extra-goals-controls" style="margin-top:12px;padding:10px;border-radius:8px;background:rgba(249,115,22,0.03);">
+                  <div style="font-size:13px;color:#d1d5db;margin-bottom:8px;"><strong>Add extra goal (optional)</strong> — choose one to complement the diet suggestions:</div>
+                  <label style="margin-right:12px;text-decoration:none;" for="extra-goal-gain_mass"><input id="extra-goal-gain_mass" type="radio" name="extra-goal" value="gain_mass" ${savedExtras.includes('gain_mass') ? 'checked' : ''}> Gain Mass</label>
+                  <label style="margin-right:12px;text-decoration:none;" for="extra-goal-lose_weight"><input id="extra-goal-lose_weight" type="radio" name="extra-goal" value="lose_weight" ${savedExtras.includes('lose_weight') ? 'checked' : ''}> Lose Weight</label>
+                  <label style="margin-right:12px;text-decoration:none;" for="extra-goal-definition"><input id="extra-goal-definition" type="radio" name="extra-goal" value="definition" ${savedExtras.includes('definition') ? 'checked' : ''}> Definition</label>
+                  <div style="margin-top:10px;"><button id="apply-goals-btn" style="padding:6px 10px;border-radius:6px;background:#f97316;color:#111827;border:none;">Apply goal</button></div>
+                  <div id="apply-notice" style="display:none;margin-top:8px;padding:8px;border-radius:6px;background:#16a34a;color:#071013;font-weight:700;width:max-content;">Goal saved</div>
+                </div>
+              `;
+            }
+
+            // Build a merged, deduplicated set of goals to render diet sections for
+            const goalsSet = new Set();
+            if (hasRoutine && lastData.inputs && lastData.inputs.goal) goalsSet.add(lastData.inputs.goal);
+            if (hasGen && genData.inputs && genData.inputs.goal) goalsSet.add(genData.inputs.goal);
+            // also include any additionalGoals that might have been saved previously
+            if (hasRoutine && lastData.inputs && Array.isArray(lastData.inputs.additionalGoals)) {
+              lastData.inputs.additionalGoals.forEach(g => goalsSet.add(g));
+            }
+
+            // Determine weight/height preference: prefer routine inputs, else generated diet inputs
+            const weightPref = (hasRoutine && lastData.inputs && lastData.inputs.weight) ? lastData.inputs.weight : (hasGen && genData.inputs && genData.inputs.weight ? genData.inputs.weight : null);
+            const heightPref = (hasRoutine && lastData.inputs && lastData.inputs.height) ? lastData.inputs.height : (hasGen && genData.inputs && genData.inputs.height ? genData.inputs.height : null);
+
+            // Render a diet section for each unique goal
+            if (goalsSet.size > 0) {
+              html += '<div style="margin-top:12px;">';
+              goalsSet.forEach(g => {
+                try { html += generateDietLocal(g, weightPref || null, heightPref || null); } catch(e){}
+              });
+              html += '</div>';
+            } else if (hasGen) {
+              // fallback: render generated diet HTML (if gen exists but no structured inputs)
+              html += '<div style="margin-top:12px;">' + (genData.dietHtml || '') + '</div>';
+            }
+
+            // Insert controls (if any) above the diet content
+            function renderControlsAndDiets(extraGoals) {
+              // Build the merged goals set
+              const mergedGoals = new Set();
+              if (hasRoutine && lastData.inputs && lastData.inputs.goal) mergedGoals.add(lastData.inputs.goal);
+              if (hasGen && genData.inputs && genData.inputs.goal) mergedGoals.add(genData.inputs.goal);
+              if (Array.isArray(extraGoals)) extraGoals.forEach(g => mergedGoals.add(g));
+
+              // Build diets HTML
+              let dietsHtml = '';
+              dietsHtml += '<div>' + (hasRoutine ? (lastData.routineHtml || '') : '') + '</div>';
+              if (mergedGoals.size > 0) {
+                 dietsHtml += '<div style="margin-top:12px;">' + generateMergedDiet(Array.from(mergedGoals), weightPref || null, heightPref || null) + '</div>';
+              } else if (hasGen) {
+                dietsHtml += '<div style="margin-top:12px;">' + (genData.dietHtml || '') + '</div>';
+              }
+
+              // append delete and back buttons
+              const actionsHtml = '<div style="margin-top:20px;text-align:center;display:flex;gap:12px;justify-content:center;"><button id="delete-saved-diet" style="padding:12px 24px;background:transparent;border:2px solid #dc2626;border-radius:10px;color:#dc2626;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;text-transform:uppercase;letter-spacing:1px;">🗑️ Delete & Create New</button><a href="index.html" style="padding:12px 24px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:14px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:1px;display:inline-block;">← Back to Main</a></div>';
+              container.innerHTML = controlsHtml + dietsHtml + actionsHtml;
+              container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              // hide static plan when personalized/generated content is shown
+              try { const sp = document.getElementById('static-plan'); if (sp) sp.style.display = 'none'; } catch(e){}
+
+              // Attach delete button handler
+              const deleteSavedBtn = document.getElementById('delete-saved-diet');
+              if (deleteSavedBtn) {
+                deleteSavedBtn.addEventListener('click', function() {
+                  if (confirm('🗑️ Delete saved diet plan and create a new one?')) {
+                    localStorage.removeItem('manthor_generated_diet');
+                    localStorage.removeItem('manthor_last_result');
+                    location.reload();
+                  }
+                });
+              }
+
+              // Attach handler to the newly inserted Apply button so changes can be made repeatedly
+              const applyBtnNew = document.getElementById('apply-goals-btn');
+              if (applyBtnNew) {
+                applyBtnNew.addEventListener('click', function(){
+                  try {
+                    const selected = document.querySelector('input[name="extra-goal"]:checked')?.value || null;
+                    const raw = localStorage.getItem('manthor_last_result');
+                    let data = raw ? JSON.parse(raw) : { inputs: {}, routineHtml: '' };
+                    data.inputs = data.inputs || {};
+                    data.inputs.additionalGoals = selected ? [selected] : [];
+                    localStorage.setItem('manthor_last_result', JSON.stringify(data));
+
+                    // re-render with new selected goal (array expected by renderer)
+                    renderControlsAndDiets(data.inputs.additionalGoals);
+
+                    // show visual confirmation
+                    const notice = document.getElementById('apply-notice');
+                    if (notice) {
+                      notice.style.display = 'inline-block';
+                      setTimeout(() => { try { notice.style.display = 'none'; } catch(e){} }, 2500);
+                    }
+                  } catch(e) { console.warn('failed to apply extra goals', e); }
+                });
+              }
+            }
+
+            // initial render using any previously saved additionalGoals
+            const initialExtras = (lastData && lastData.inputs && Array.isArray(lastData.inputs.additionalGoals)) ? lastData.inputs.additionalGoals : [];
+            renderControlsAndDiets(initialExtras);
+
+            return;
+          }
+        } catch(e){ /* ignore parse errors */ }
+
+        // No stored personalized routine or generated diet — show enhanced generator UI
+        container.innerHTML = `
+          <div class="generator-box">
+            <h3 style="color:#f97316;font-size:20px;margin:0 0 12px 0;text-transform:uppercase;letter-spacing:1px;">🔥 Personalized Diet Generator</h3>
+            <p style="color:#d1d5db;font-size:14px;margin-bottom:16px;">Choose your goal to get started with your personalized nutrition plan.</p>
+            
+            <div class="input-group" style="margin-bottom:16px;">
+              <label for="gen-goal">Primary Goal</label>
+              <select id="gen-goal">
+                <option value="">-- Select Your Goal --</option>
+                <option value="vitality">🌟 Vitality & Wellness (FREE)</option>
+                <option value="gain_mass">💪 Gain Muscle Mass 🔒 PREMIUM</option>
+                <option value="lose_weight">🔥 Lose Weight 🔒 PREMIUM</option>
+                <option value="definition">⚡ Definition & Cutting 🔒 PREMIUM</option>
+              </select>
+            </div>
+            
+            <div id="premium-notice" style="display:none;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(220,38,38,0.15));border:2px solid #f97316;border-radius:10px;padding:16px;margin-bottom:16px;">
+              <h4 style="color:#f97316;margin:0 0 8px 0;font-size:16px;">🔒 Premium Plan Required</h4>
+              <p style="color:#d1d5db;font-size:14px;margin:0 0 12px 0;">Advanced goal plans (Muscle Gain, Weight Loss, Definition) require a premium subscription.</p>
+              <a href="comprar.html" style="display:inline-block;padding:10px 20px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:8px;color:#fff;font-size:14px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">🔥 Unlock Premium Plans</a>
+            </div>
+            
+            <div id="form-fields" style="display:none;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                <div class="input-group">
+                  <label for="gen-age">Age</label>
+                  <input id="gen-age" type="number" min="18" max="80" placeholder="Ex: 35" />
+                </div>
+                
+                <div class="input-group">
+                  <label for="gen-weight">Weight (lbs)</label>
+                  <input id="gen-weight" type="number" min="90" max="440" placeholder="Ex: 180" />
+                </div>
+                
+                <div class="input-group">
+                  <label for="gen-height">Height (in)</label>
+                  <input id="gen-height" type="number" min="55" max="85" placeholder="Ex: 70" />
+                </div>
+                
+                <div class="input-group">
+                  <label for="gen-activity">Activity Level</label>
+                  <select id="gen-activity">
+                    <option value="sedentary">Sedentary (little/no exercise)</option>
+                    <option value="light" selected>Light (1-3x/week)</option>
+                    <option value="moderate">Moderate (3-5x/week)</option>
+                    <option value="active">Very Active (6-7x/week)</option>
+                    <option value="extreme">Athlete (2x/day)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <button id="gen-btn" class="btn-generate">🎯 Generate My Diet Plan</button>
+            </div>
+            
+            <div id="gen-output" style="margin-top:20px;"></div>
+          </div>
+        `;
+
+        // Show/hide fields based on selected goal
+        const goalSelect = document.getElementById('gen-goal');
+        const premiumNotice = document.getElementById('premium-notice');
+        const formFields = document.getElementById('form-fields');
+        
+        if (goalSelect && premiumNotice && formFields) {
+          goalSelect.addEventListener('change', function() {
+            const selectedGoal = this.value;
+            
+            if (!selectedGoal) {
+              // No goal selected
+              premiumNotice.style.display = 'none';
+              formFields.style.display = 'none';
+              return;
+            }
+            
+            const isPremium = ['gain_mass', 'lose_weight', 'definition'].includes(selectedGoal);
+            
+            if (isPremium) {
+              // Premium goal - show notice, hide form
+              premiumNotice.style.display = 'block';
+              formFields.style.display = 'none';
+            } else {
+              // Free goal (vitality) - hide notice, show form
+              premiumNotice.style.display = 'none';
+              formFields.style.display = 'block';
+            }
+          });
+        }
+
+        const genBtn = document.getElementById('gen-btn');
+        if (genBtn) {
+          genBtn.addEventListener('click', function(){
+            const age = parseInt(document.getElementById('gen-age')?.value) || 35;
+            const weight = parseFloat(document.getElementById('gen-weight')?.value);
+            const height = parseFloat(document.getElementById('gen-height')?.value);
+            const activity = document.getElementById('gen-activity')?.value || 'light';
+            const goalVal = document.getElementById('gen-goal')?.value || 'vitality';
+            
+            // Check if premium goal selected
+            const premiumGoals = ['gain_mass', 'lose_weight', 'definition'];
+            if (premiumGoals.includes(goalVal)) {
+              alert('🔒 This is a PREMIUM plan!\n\nAdvanced goals (Muscle Gain, Weight Loss, Definition) require a premium subscription.\n\nClick "Unlock Premium Plans" to get access or select "Vitality & Wellness" (FREE).');
+              document.getElementById('premium-notice').style.display = 'block';
+              document.getElementById('premium-notice').scrollIntoView({ behavior: 'smooth', block: 'center' });
+              return;
+            }
+            
+            if (!weight || !height) {
+              alert('⚠️ Please enter your weight and height!');
+              return;
+            }
+            
+            // Calculate BMI and convert units
+            const bmi = ((weight / (height ** 2)) * 703).toFixed(1);
+            const weightKg = (weight * 0.453592).toFixed(1);
+            const heightCm = (height * 2.54).toFixed(0);
+            
+            // Calculate TDEE (Total Daily Energy Expenditure) - Mifflin-St Jeor for men
+            const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+            const activityMultipliers = {
+              sedentary: 1.2,
+              light: 1.375,
+              moderate: 1.55,
+              active: 1.725,
+              extreme: 1.9
+            };
+            const tdee = Math.round(bmr * (activityMultipliers[activity] || 1.375));
+            
+            // Adjust calories and macros based on goal
+            let targetCalories, proteinG, carbsG, fatG;
+            if (goalVal === 'gain_mass') {
+              targetCalories = Math.round(tdee + 300);
+              proteinG = Math.round(weightKg * 2.2);
+              fatG = Math.round(weightKg * 1.0);
+              carbsG = Math.round((targetCalories - (proteinG * 4) - (fatG * 9)) / 4);
+            } else if (goalVal === 'lose_weight') {
+              targetCalories = Math.round(tdee - 500);
+              proteinG = Math.round(weightKg * 2.0);
+              fatG = Math.round(weightKg * 0.8);
+              carbsG = Math.round((targetCalories - (proteinG * 4) - (fatG * 9)) / 4);
+            } else if (goalVal === 'definition') {
+              targetCalories = Math.round(tdee - 300);
+              proteinG = Math.round(weightKg * 2.2);
+              fatG = Math.round(weightKg * 0.9);
+              carbsG = Math.round((targetCalories - (proteinG * 4) - (fatG * 9)) / 4);
+            } else { // vitality
+              targetCalories = tdee;
+              proteinG = Math.round(weightKg * 1.8);
+              fatG = Math.round(weightKg * 1.0);
+              carbsG = Math.round((targetCalories - (proteinG * 4) - (fatG * 9)) / 4);
+            }
+            
+            const html = window.generateEnhancedDiet(goalVal, weight, height, bmi, targetCalories, proteinG, carbsG, fatG, activity, age);
+            const out = document.getElementById('gen-output');
+            if (out) {
+              out.innerHTML = html;
+              out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              
+              // Show static plan when diet is generated
+              const staticPlan = document.getElementById('static-plan');
+              if (staticPlan) staticPlan.style.display = 'block';
+              
+              // Attach delete button handler
+              setTimeout(() => {
+                const deleteBtn = document.getElementById('delete-diet-btn');
+                if (deleteBtn) {
+                  deleteBtn.addEventListener('click', function() {
+                    if (confirm('🗑️ Delete this diet plan and create a new one?')) {
+                      localStorage.removeItem('manthor_generated_diet');
+                      location.reload();
+                    }
+                  });
+                }
+              }, 100);
+            }
+
+            // Save the generated diet
+            const payload = { 
+              timestamp: Date.now(), 
+              inputs: { age, weight, height, goal: goalVal, activity }, 
+              dietHtml: html,
+              macros: { calories: targetCalories, protein: proteinG, carbs: carbsG, fat: fatG }
+            };
+            try { localStorage.setItem('manthor_generated_diet', JSON.stringify(payload)); } catch(e){ console.warn('save failed', e); }
+          });
+        }
+        
+        // Enhanced diet generator with full meal plans
+        window.generateEnhancedDiet = function(goal, weight, height, bmi, calories, protein, carbs, fat, activity, age) {
+          const goalTitles = {
+            gain_mass: '💪 Build Muscle',
+            lose_weight: '🔥 Lose Weight',
+            definition: '⚡ Get Defined',
+            vitality: '🌟 Daily Wellness'
+          };
+          
+          const bmiStatus = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Healthy' : bmi < 30 ? 'Overweight' : 'Obese';
+          const waterOz = Math.round(weight * 0.5);
+          
+          let html = `
+            <div style="background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(249,115,22,0.1));border:2px solid rgba(220,38,38,0.4);border-radius:12px;padding:20px;margin-top:20px;">
+              <h2 style="color:#f97316;margin:0 0 16px 0;font-size:24px;text-transform:uppercase;letter-spacing:1px;">${goalTitles[goal]}</h2>
+              
+              <div style="background:linear-gradient(135deg,#dc2626,#b91c1c);padding:18px;border-radius:10px;border:2px solid #f97316;margin-bottom:20px;">
+                <h3 style="color:#fbbf24;margin:0 0 12px 0;font-size:18px;">⚡ How to Use ManThor</h3>
+                <p style="color:#fff;font-size:14px;line-height:1.7;margin:0 0 10px 0;"><strong>Daily Routine:</strong> Take 20 drops every day at the same time (morning or evening works great). Mix with water or juice.</p>
+                <p style="color:#fff;font-size:14px;line-height:1.7;margin:0;"><strong>Performance Boost:</strong> Take an extra 20 drops (total 40 drops) about 30 minutes before intimate moments for enhanced vitality.</p>
+              </div>
+              
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
+                <div class="macro-card">
+                  <div style="color:#9ca3af;font-size:12px;text-transform:uppercase;margin-bottom:4px;">BMI</div>
+                  <strong>${bmi}</strong>
+                  <div style="font-size:11px;color:#d1d5db;margin-top:2px;">${bmiStatus}</div>
+                </div>
+                <div class="macro-card">
+                  <div style="color:#9ca3af;font-size:12px;text-transform:uppercase;margin-bottom:4px;">Calories</div>
+                  <strong>${calories}</strong>
+                  <div style="font-size:11px;color:#d1d5db;margin-top:2px;">per day</div>
+                </div>
+                <div class="macro-card">
+                  <div style="color:#9ca3af;font-size:12px;text-transform:uppercase;margin-bottom:4px;">Protein</div>
+                  <strong>${protein}g</strong>
+                </div>
+                <div class="macro-card">
+                  <div style="color:#9ca3af;font-size:12px;text-transform:uppercase;margin-bottom:4px;">Carbs</div>
+                  <strong>${carbs}g</strong>
+                </div>
+                <div class="macro-card">
+                  <div style="color:#9ca3af;font-size:12px;text-transform:uppercase;margin-bottom:4px;">Fats</div>
+                  <strong>${fat}g</strong>
+                </div>
+              </div>
+          `;
+          
+          // Generate meal plan based on goal
+          if (goal === 'gain_mass') {
+            html += `
+              <h3 style="color:#dc2626;margin:20px 0 12px 0;font-size:18px;">🍳 Your Daily Meals</h3>
+              
+              <div class="meal">
+                <h4>Breakfast (7-8 AM) - ${Math.round(calories * 0.25)} calories</h4>
+                <ul>
+                  <li>4 whole eggs (scrambled or fried)</li>
+                  <li>1 cup oatmeal with cinnamon</li>
+                  <li>1 banana with honey</li>
+                  <li>Glass of orange juice</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Eggs → Greek yogurt with granola | Oatmeal → Whole wheat toast | Banana → Apple or berries | OJ → Any fruit juice</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Mid-Morning Snack (10 AM) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>Greek yogurt with granola</li>
+                  <li>Handful of almonds</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Greek yogurt → Cottage cheese or protein shake | Granola → Oats or cereal | Almonds → Peanuts, cashews, or walnuts</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Lunch (12:30-1:30 PM) - ${Math.round(calories * 0.30)} calories</h4>
+                <ul>
+                  <li>8oz grilled chicken breast</li>
+                  <li>1.5 cups brown rice</li>
+                  <li>1 large sweet potato</li>
+                  <li>Mixed salad with olive oil</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Chicken → Turkey, salmon, or lean beef | Brown rice → White rice, pasta, or quinoa | Sweet potato → Regular potato or corn | Salad → Steamed broccoli or green beans</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Pre-Workout (4 PM) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>2 slices whole wheat bread</li>
+                  <li>2 tbsp peanut butter</li>
+                  <li>1 banana</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Whole wheat bread → Bagel or English muffin | Peanut butter → Almond butter or jam | Banana → Apple or energy bar</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Post-Workout (Right After Gym) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>Protein shake (40g protein powder)</li>
+                  <li>1 banana</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Protein powder → Chocolate milk (16oz) or Greek yogurt | Banana → Apple, berries, or granola bar</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Dinner (7-8 PM) - ${Math.round(calories * 0.15)} calories</h4>
+                <ul>
+                  <li>6oz lean beef or salmon</li>
+                  <li>1 cup pasta</li>
+                  <li>Steamed vegetables (broccoli, carrots)</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Beef → Chicken, pork chops, or tuna | Salmon → Any fish or shrimp | Pasta → Rice, quinoa, or potatoes | Veggies → Any frozen or fresh vegetables</p>
+              </div>
+            `;
+          } else if (goal === 'lose_weight' || goal === 'definition') {
+            html += `
+              <h3 style="color:#dc2626;margin:20px 0 12px 0;font-size:18px;">🍳 Your Daily Meals</h3>
+              
+              <div class="meal">
+                <h4>Breakfast (7-8 AM) - ${Math.round(calories * 0.25)} calories</h4>
+                <ul>
+                  <li>5 egg whites + 1 whole egg</li>
+                  <li>1/2 cup oatmeal</li>
+                  <li>1 cup berries</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Egg whites → Turkey bacon (3 strips) | Whole egg → Avocado (1/4) | Oatmeal → Whole wheat toast (1 slice) | Berries → Apple, orange, or grapefruit</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Mid-Morning Snack (10 AM) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>1 apple with 1 tbsp almond butter</li>
+                  <li>Green tea or black coffee</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Apple → Pear, orange, or carrots | Almond butter → Peanut butter or small handful of nuts | Green tea → Black coffee or herbal tea</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Lunch (12:30-1:30 PM) - ${Math.round(calories * 0.30)} calories</h4>
+                <ul>
+                  <li>6oz grilled chicken breast</li>
+                  <li>Large mixed salad (lettuce, tomato, cucumber)</li>
+                  <li>1/2 cup brown rice</li>
+                  <li>1 tbsp olive oil dressing</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Chicken → Turkey breast, white fish, or shrimp | Salad → Steamed broccoli, green beans, or spinach | Brown rice → Quinoa or small sweet potato | Olive oil → Balsamic vinegar or lemon juice</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Pre-Workout (4 PM) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>1 small banana</li>
+                  <li>Black coffee</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Banana → Apple or rice cakes (2) | Coffee → Green tea or pre-workout drink</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Post-Workout (Right After Gym) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>Protein shake (30g protein powder)</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Protein shake → 6oz grilled chicken or can of tuna | Protein powder → Greek yogurt (1 cup) or cottage cheese</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Dinner (7-8 PM) - ${Math.round(calories * 0.15)} calories</h4>
+                <ul>
+                  <li>6oz white fish (tilapia, cod) or chicken</li>
+                  <li>Large portion of steamed vegetables</li>
+                  <li>Small sweet potato</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Fish → Chicken breast, turkey, or lean pork | Chicken → Any lean meat or tofu | Veggies → Any low-calorie vegetables | Sweet potato → Butternut squash or cauliflower rice</p>
+              </div>
+            `;
+          } else { // vitality
+            html += `
+              <h3 style="color:#dc2626;margin:20px 0 12px 0;font-size:18px;">🍳 Your Daily Meals</h3>
+              
+              <div class="meal">
+                <h4>Breakfast (7-8 AM) - ${Math.round(calories * 0.25)} calories</h4>
+                <ul>
+                  <li>3 eggs (any style)</li>
+                  <li>1 cup oatmeal with berries</li>
+                  <li>1 tbsp honey</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Eggs → Greek yogurt or cottage cheese | Oatmeal → Whole wheat toast or bagel | Berries → Banana, apple, or any fruit | Honey → Maple syrup or jam</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Mid-Morning Snack (10 AM) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>Greek yogurt with nuts</li>
+                  <li>1 piece of fruit</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Greek yogurt → Cottage cheese or protein bar | Nuts → Granola or trail mix | Fruit → Apple, banana, orange, or berries</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Lunch (12:30-1:30 PM) - ${Math.round(calories * 0.30)} calories</h4>
+                <ul>
+                  <li>6oz lean protein (chicken, fish, or beef)</li>
+                  <li>1 cup rice or pasta</li>
+                  <li>Mixed vegetables (broccoli, carrots)</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Chicken → Turkey, salmon, tuna, or lean beef | Fish → Chicken or pork | Rice → Quinoa, potatoes, or bread | Pasta → Rice or sweet potato | Veggies → Any steamed or roasted vegetables</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Afternoon Snack (4 PM) - ${Math.round(calories * 0.10)} calories</h4>
+                <ul>
+                  <li>Protein bar or shake</li>
+                  <li>Handful of almonds</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Protein bar → Greek yogurt or beef jerky | Protein shake → Chocolate milk or smoothie | Almonds → Peanuts, cashews, or string cheese</p>
+              </div>
+              
+              <div class="meal">
+                <h4>Dinner (7-8 PM) - ${Math.round(calories * 0.25)} calories</h4>
+                <ul>
+                  <li>6oz protein (chicken, beef, or fish)</li>
+                  <li>1 cup quinoa or brown rice</li>
+                  <li>Roasted vegetables</li>
+                </ul>
+                <p style="color:#9ca3af;font-size:13px;margin-top:8px;"><strong>Easy Swaps:</strong> Chicken → Turkey, pork, or fish | Beef → Chicken or turkey burgers | Fish → Any seafood or lean meat | Quinoa → Rice, pasta, or potatoes | Veggies → Any vegetables you enjoy</p>
+              </div>
+            `;
+          }
+          
+          html += `
+              <div style="background:rgba(249,115,22,0.1);padding:16px;border-radius:10px;border:1px solid rgba(249,115,22,0.3);margin-top:20px;">
+                <h3 style="color:#f97316;margin:0 0 12px 0;font-size:16px;">💪 Daily Wellness Tips</h3>
+                <ul style="color:#d1d5db;font-size:14px;line-height:1.8;">
+                  <li><strong>Stay Hydrated:</strong> Drink ${waterOz} oz of water daily (about ${Math.round(waterOz/8)} glasses)</li>
+                  <li><strong>Eat Regularly:</strong> Have meals every 3-4 hours to keep your energy steady</li>
+                  <li><strong>Get Good Sleep:</strong> Aim for 7-9 hours each night for better results</li>
+                  <li><strong>Stay Active:</strong> ${activity === 'sedentary' || activity === 'light' ? 'Try to move more - even a 20-minute walk helps!' : 'Keep up your great exercise routine!'}</li>
+                  <li><strong>Track Progress:</strong> Weigh yourself once a week and adjust portions if needed</li>
+                  <li><strong>Be Flexible:</strong> Use the easy swaps above - real life happens, and that's okay!</li>
+                </ul>
+              </div>
+              
+              <div style="background:rgba(34,197,94,0.1);padding:14px;border-radius:8px;border:1px solid rgba(34,197,94,0.3);margin-top:16px;">
+                <p style="color:#d1d5db;font-size:13px;line-height:1.6;margin:0;">
+                  <strong style="color:#22c55e;">💚 Remember:</strong> This is general wellness guidance. Everyone's body is different. If you have health conditions or take medications, check with your doctor before making big diet changes. ManThor supports your wellness journey!
+                </p>
+              </div>
+              
+              <div style="margin-top:20px;text-align:center;display:flex;gap:12px;justify-content:center;">
+                <button id="delete-diet-btn" style="padding:12px 24px;background:transparent;border:2px solid #dc2626;border-radius:10px;color:#dc2626;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;text-transform:uppercase;letter-spacing:1px;">
+                  🗑️ Delete & Create New
+                </button>
+                <a href="index.html" style="padding:12px 24px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:14px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:1px;display:inline-block;transition:all 0.3s;">
+                  ← Back to Main
+                </a>
+              </div>
+            </div>
+          `;
+          
+          return html;
+        };
+      })();
+    </script>
+</body>
+</html>
