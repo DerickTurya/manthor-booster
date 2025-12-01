@@ -6,8 +6,8 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
-const JWT_SECRET = 'manthor_secret_key_2025_viking_power_' + Math.random();
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'manthor_secret_key_2025_viking_power_' + Math.random();
 
 // Middleware
 app.use(express.json());
@@ -337,11 +337,12 @@ app.listen(PORT, () => {
 ╔═══════════════════════════════════════╗
 ║   🔥 MANTHOR SERVER ATIVO 🔥         ║
 ║                                       ║
-║   Servidor: http://localhost:${PORT}     ║
+║   Servidor: Port ${PORT}              ║
 ║   Banco de dados: SQLite (manthor.db) ║
 ║   API: REST + JWT Authentication      ║
 ║                                       ║
 ║   🪓  Viking Power Activated! 🪓       ║
 ╚═══════════════════════════════════════╝
   `);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
