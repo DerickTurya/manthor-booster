@@ -305,8 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Default checkout links (fall back if localStorage not set). Update when you provide URLs.
   const defaultCheckoutLinks = {
     '1': 'https://rad-supply.mycartpanda.com/checkout/202808132:1', // 1-month link provided by user
-    '3': 'https://rad-supply.mycartpanda.com/ckt/8wQMWR', // 3-month link
-    '6': 'https://rad-supply.mycartpanda.com/ckt/Ygo8yR', // 6-month link
+    '3': 'https://rad-supply.mycartpanda.com/ckt/Ygo8yR', // 3-month card gets 6-month link
+    '6': 'https://rad-supply.mycartpanda.com/ckt/8wQMWR', // 6-month card gets 3-month link
     '9': 'https://rad-supply.mycartpanda.com/ckt/wx8LmD' // 9-month link
   };
   function applyCheckoutLinks() {
