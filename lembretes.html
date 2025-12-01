@@ -7,12 +7,32 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .reminder-app { max-width:720px; margin:28px auto; padding:18px; }
-    .reminder-row { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+    .reminder-row { display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
     .reminders-list { margin-top:12px; }
-    .reminder-item { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(220,38,38,0.06); }
-    .btn { background:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%); color:#fff; padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:800; }
+    .reminder-item { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(220,38,38,0.06); margin-bottom:10px; }
+    .btn { background:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%); color:#fff; padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:800; font-size:13px; }
     .btn.secondary { background:transparent; border:1px solid rgba(249,115,22,0.9); color:#f97316; }
     .note { font-size:13px; color:#d1d5db; margin-top:8px; }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .reminder-app { padding:12px; margin:10px; }
+      .reminder-row { flex-direction:column; gap:10px; width:100%; }
+      .reminder-row input[type="time"],
+      .reminder-row input[type="text"] { width:100% !important; padding:12px !important; font-size:16px; }
+      .reminder-row label { width:100%; justify-content:center; }
+      .reminder-row .btn { width:100%; padding:14px; font-size:15px; }
+      
+      .reminder-item { flex-direction:column; gap:10px; align-items:flex-start; }
+      .reminder-item > div:last-child { width:100%; }
+      .reminder-item .btn { width:100%; }
+      
+      .availability-section { padding:12px !important; }
+      .availability-section > div:first-child { flex-direction:column !important; align-items:flex-start !important; }
+      .availability-section .btn { width:100% !important; margin:10px 0 0 0 !important; }
+      
+      #test-notification { padding:14px !important; font-size:15px !important; }
+    }
   </style>
 </head>
 <body>
@@ -37,12 +57,12 @@
       </div>
       
       <!-- Availability and AI -->
-      <div style="margin-top:12px;padding:10px;border-radius:8px;border:1px solid rgba(220,38,38,0.06);background:rgba(255,255,255,0.01);">
+      <div class="availability-section" style="margin-top:12px;padding:10px;border-radius:8px;border:1px solid rgba(220,38,38,0.06);background:rgba(255,255,255,0.01);">
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
           <label style="color:#d1d5db;font-weight:700;">Availability:</label>
-          <label style="color:#d1d5db"><input type="checkbox" id="avail-morning"> Morning</label>
-          <label style="color:#d1d5db"><input type="checkbox" id="avail-afternoon"> Afternoon</label>
-          <label style="color:#d1d5db"><input type="checkbox" id="avail-evening"> Evening</label>
+          <label style="color:#d1d5db;display:flex;align-items:center;gap:5px;"><input type="checkbox" id="avail-morning"> Morning</label>
+          <label style="color:#d1d5db;display:flex;align-items:center;gap:5px;"><input type="checkbox" id="avail-afternoon"> Afternoon</label>
+          <label style="color:#d1d5db;display:flex;align-items:center;gap:5px;"><input type="checkbox" id="avail-evening"> Evening</label>
           <button id="suggest-btn" class="btn" style="margin-left:auto;">Suggest Best Time (AI)</button>
         </div>
         <div style="margin-top:8px;color:#9ca3af;font-size:13px;">The AI suggests a time based on your chosen availability, avoiding conflicts with existing reminders.</div>
