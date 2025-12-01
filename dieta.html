@@ -56,30 +56,6 @@
         const container = document.getElementById('personalized-result');
         if (!container) return;
 
-        // Check if user has purchased
-        function hasPurchased() {
-          return localStorage.getItem('manthor_purchased') === 'true';
-        }
-
-        function showPurchaseRequired() {
-          container.innerHTML = `
-            <div style="background:linear-gradient(135deg,rgba(220,38,38,0.2),rgba(249,115,22,0.1));border:2px solid rgba(220,38,38,0.4);padding:32px;border-radius:16px;text-align:center;">
-              <div style="font-size:64px;margin-bottom:16px;">🔒</div>
-              <h2 style="color:#f97316;margin:0 0 16px 0;font-size:24px;">Premium Diet Plans Locked</h2>
-              <p style="color:#d1d5db;font-size:16px;line-height:1.6;margin-bottom:24px;">
-                To access your personalized diet plans, you need to purchase ManThor first.<br>
-                Get your transformation package and unlock all premium features!
-              </p>
-              <a href="comprar.html" style="display:inline-block;padding:16px 32px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:18px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s;">
-                🛒 View Plans & Purchase
-              </a>
-              <div style="margin-top:20px;">
-                <a href="index.html" style="color:#f97316;font-size:14px;text-decoration:none;">← Back to Main Menu</a>
-              </div>
-            </div>
-          `;
-        }
-
         function goalLabel(key) {
           if (!key) return '';
           const map = {
@@ -396,14 +372,14 @@
           }
         } catch(e){ /* ignore parse errors */ }
 
-        // Check if user has purchased before showing content
-        if (!hasPurchased()) {
-          showPurchaseRequired();
-          return;
-        }
-
         // No stored personalized routine or generated diet — show enhanced generator UI
         container.innerHTML = `
+          <div style="background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(220,38,38,0.1));border:2px solid #f97316;border-radius:12px;padding:20px;margin-bottom:20px;text-align:center;">
+            <div style="font-size:48px;margin-bottom:12px;">🎁</div>
+            <h3 style="color:#f97316;margin:0 0 8px 0;font-size:20px;">FREE BONUS: Premium Diet Plans!</h3>
+            <p style="color:#d1d5db;font-size:14px;margin:0;">Get access to all personalized diet plans as a special bonus with your ManThor purchase!</p>
+          </div>
+          
           <div class="generator-box">
             <h3 style="color:#f97316;font-size:20px;margin:0 0 12px 0;text-transform:uppercase;letter-spacing:1px;">🔥 Personalized Diet Generator</h3>
             <p style="color:#d1d5db;font-size:14px;margin-bottom:16px;">Choose your goal to get started with your personalized nutrition plan.</p>
@@ -412,10 +388,10 @@
               <label for="gen-goal">Primary Goal</label>
               <select id="gen-goal">
                 <option value="">-- Select Your Goal --</option>
-                <option value="gain_mass">💪 Gain Muscle Mass</option>
-                <option value="lose_weight">🔥 Lose Weight</option>
-                <option value="definition">⚡ Definition & Cutting</option>
-                <option value="vitality">🌟 Vitality & Wellness</option>
+                <option value="gain_mass">💪 Gain Muscle Mass 🎁 BONUS</option>
+                <option value="lose_weight">🔥 Lose Weight 🎁 BONUS</option>
+                <option value="definition">⚡ Definition & Cutting 🎁 BONUS</option>
+                <option value="vitality">🌟 Vitality & Wellness 🎁 BONUS</option>
               </select>
             </div>
             
