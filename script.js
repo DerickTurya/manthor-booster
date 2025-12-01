@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const defaultCheckoutLinks = {
     '1': 'https://rad-supply.mycartpanda.com/checkout/202808132:1', // 1-month link provided by user
     '3': 'https://rad-supply.mycartpanda.com/ckt/Ygo8yR', // 3-month link
-    '6': 'https://rad-supply.mycartpanda.com/checkout/202811355:1'
+    '6': 'https://rad-supply.mycartpanda.com/ckt/8wQMWR' // 6-month link
   };
   function applyCheckoutLinks() {
     try {
