@@ -150,17 +150,44 @@
         
         console.log('🔔 Triggering notification:', title, body);
 
-        // Play sound alert
+        // Play ANNOYING sound alert REPEATEDLY
         playNotificationSound();
+        
+        // Keep playing sound every 5 seconds for 30 seconds
+        let soundCount = 0;
+        const soundInterval = setInterval(() => {
+          soundCount++;
+          if (soundCount >= 6) { // Stop after 30 seconds (6 x 5 sec)
+            clearInterval(soundInterval);
+          } else {
+            playNotificationSound();
+          }
+        }, 5000);
 
-        // Vibrate if supported
+        // AGGRESSIVE Vibration pattern (repeated)
         try { 
           if (navigator.vibrate) {
-            navigator.vibrate([300, 100, 300, 100, 300]);
+            // Long aggressive vibration
+            navigator.vibrate([500, 200, 500, 200, 500, 200, 500, 200, 500]);
+            
+            // Keep vibrating every 5 seconds for 30 seconds
+            let vibrateCount = 0;
+            const vibrateInterval = setInterval(() => {
+              vibrateCount++;
+              if (vibrateCount >= 6) {
+                clearInterval(vibrateInterval);
+              } else {
+                navigator.vibrate([500, 200, 500, 200, 500]);
+              }
+            }, 5000);
           }
         } catch(e){}
 
-        // Show notification
+        // Show PERSISTENT notification with modal alert
+        // Show modal alert first (harder to dismiss)
+        showPersistentAlert(title, body);
+        
+        // Then try system notification
         try {
           if ('serviceWorker' in navigator) {
             const reg = await navigator.serviceWorker.getRegistration();
@@ -172,36 +199,60 @@
                 requireInteraction: true,
                 icon: '/icon-192.png',
                 badge: '/icon-72.png',
-                vibrate: [300, 100, 300, 100, 300]
+                vibrate: [500, 200, 500, 200, 500],
+                silent: false
               });
             } else if (window.Notification && Notification.permission === 'granted') {
-              new Notification(title, { body, requireInteraction: true });
-            } else {
-              alert('⏰ ' + body);
+              new Notification(title, { body, requireInteraction: true, vibrate: [500, 200, 500] });
             }
           } else if (window.Notification && Notification.permission === 'granted') {
-            new Notification(title, { body, requireInteraction: true });
-          } else {
-            alert('⏰ ' + body);
+            new Notification(title, { body, requireInteraction: true, vibrate: [500, 200, 500] });
           }
         } catch (e) {
           console.warn('Notification failed:', e);
-          alert('⏰ ' + body);
         }
+      }
+
+      function showPersistentAlert(title, body) {
+        // Create full-screen modal alert
+        const modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(220,38,38,0.95);z-index:99999;display:flex;align-items:center;justify-content:center;animation:shake 0.5s infinite;';
+        
+        const content = document.createElement('div');
+        content.style.cssText = 'background:#1a0a0a;padding:40px;border-radius:20px;text-align:center;max-width:400px;border:3px solid #dc2626;';
+        content.innerHTML = `
+          <div style="font-size:80px;margin-bottom:20px;">⏰</div>
+          <h2 style="color:#dc2626;font-size:28px;margin-bottom:15px;">${title}</h2>
+          <p style="color:#fff;font-size:20px;margin-bottom:30px;">${body}</p>
+          <button id="dismiss-alarm" style="background:#dc2626;color:#fff;padding:15px 40px;border:none;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer;width:100%;">I TOOK IT! ✅</button>
+        `;
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = '@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }';
+        document.head.appendChild(style);
+        
+        // Close only when button is clicked
+        document.getElementById('dismiss-alarm').onclick = () => {
+          document.body.removeChild(modal);
+          document.head.removeChild(style);
+        };
       }
 
       function playNotificationSound() {
         try {
           const ctx = new (window.AudioContext || window.webkitAudioContext)();
           
-          // Play a pleasant notification tone (3 beeps)
-          function beep(freq, startTime, duration) {
+          // Play ANNOYING alarm sound (loud beeps repeated)
+          function beep(freq, startTime, duration, volume = 0.3) {
             const o = ctx.createOscillator();
             const g = ctx.createGain();
-            o.type = 'sine';
+            o.type = 'square'; // Square wave = more annoying
             o.frequency.value = freq;
             g.gain.setValueAtTime(0, startTime);
-            g.gain.linearRampToValueAtTime(0.1, startTime + 0.01);
+            g.gain.linearRampToValueAtTime(volume, startTime + 0.01);
             g.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
             o.connect(g);
             g.connect(ctx.destination);
@@ -210,11 +261,15 @@
           }
           
           const now = ctx.currentTime;
-          beep(880, now, 0.15);
-          beep(988, now + 0.2, 0.15);
-          beep(1047, now + 0.4, 0.2);
+          // Repeat alarm pattern 5 times (very annoying!)
+          for (let i = 0; i < 5; i++) {
+            const offset = i * 0.8;
+            beep(1200, now + offset, 0.2, 0.4);
+            beep(800, now + offset + 0.25, 0.2, 0.4);
+            beep(1200, now + offset + 0.5, 0.2, 0.4);
+          }
           
-          setTimeout(() => { try { ctx.close(); } catch(e){} }, 1000);
+          setTimeout(() => { try { ctx.close(); } catch(e){} }, 5000);
         } catch(e) {
           console.warn('Audio failed:', e);
         }
