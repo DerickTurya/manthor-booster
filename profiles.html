@@ -341,17 +341,15 @@
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       } catch (error) {
         console.error('AI response error:', error);
-        // Fallback to simple responses
+        // Show error message
         const typingIndicator = document.getElementById('typing-indicator');
         if (typingIndicator) typingIndicator.remove();
         
-        const response = generateResponse(message);
         messagesDiv.innerHTML += `
-          <div style="background:rgba(220,38,38,0.1);padding:12px 16px;border-radius:10px;margin-bottom:12px;border-left:4px solid #f97316;">
-            <p style="color:#d1d5db;margin:0;font-size:14px;"><strong style="color:#f97316;">${currentProfile.name}:</strong> ${response}</p>
+          <div style="background:rgba(220,38,38,0.2);padding:12px 16px;border-radius:10px;margin-bottom:12px;border:2px solid #dc2626;">
+            <p style="color:#dc2626;margin:0;font-size:14px;"><strong>Error:</strong> Could not connect to AI. Please try again.</p>
           </div>
         `;
-        chatHistory.push({ role: 'assistant', content: response });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
     }
@@ -388,77 +386,6 @@ You're having a flirty, engaging conversation. Be playful, warm, and show intere
       
       const data = await response.json();
       return data.message;
-    }
-
-    function generateResponse(userMessage) {
-      const msg = userMessage.toLowerCase();
-      const profile = currentProfile;
-      
-      // Flirty/playful responses
-      if (msg.includes('beautiful') || msg.includes('pretty') || msg.includes('gorgeous') || msg.includes('hot')) {
-        return `Aww, you're sweet 😊 I appreciate the compliment! So tell me, what else caught your eye besides my looks?`;
-      }
-      
-      if (msg.includes('date') || msg.includes('meet') || msg.includes('hang out') || msg.includes('grab')) {
-        return `I like your confidence! 😉 I'd love to get to know you a bit more first though. What do you like to do for fun?`;
-      }
-      
-      if (msg.includes('drink') || msg.includes('wine') || msg.includes('coffee')) {
-        return `A drink sounds nice! I'm more of a ${profile.interests.includes('wine') ? 'wine' : 'coffee'} person myself. What about you? 🍷☕`;
-      }
-      
-      if (msg.includes('music') || msg.includes('song') || msg.includes('concert')) {
-        return `Oh you like music too? That's awesome! I've been really into ${profile.interests.split(',')[0]} lately. What kind of music gets you moving?`;
-      }
-      
-      if (msg.includes('work') || msg.includes('job') || msg.includes('do for')) {
-        return `Work keeps me busy but I love what I do! It's all about balance though. I make sure to have fun too 😏 What about you?`;
-      }
-      
-      if (msg.includes('sexy') || msg.includes('body') || msg.includes('figure')) {
-        return `Ha! You're being forward 😅 I appreciate fitness and taking care of myself. But let's get to know each other's minds first, yeah?`;
-      }
-      
-      if (msg.includes('tonight') || msg.includes('come over') || msg.includes('your place')) {
-        return `Easy there! 😂 I like a guy who's interested but I'm not that easy to get. Let's build some chemistry first, don't you think?`;
-      }
-      
-      if (msg.includes('like you') || msg.includes('into you') || msg.includes('attracted')) {
-        return `That's really sweet to hear 💕 I'm enjoying talking to you too. There's something intriguing about you... tell me more about yourself?`;
-      }
-      
-      // Interest-based responses
-      if (msg.includes('travel') || msg.includes('vacation')) {
-        return `I LOVE traveling! There's something so exciting about exploring new places. Where's your dream destination? 🌍`;
-      }
-      
-      if (msg.includes('food') || msg.includes('restaurant') || msg.includes('eat')) {
-        return `Ooh a foodie! I'm always down to try new restaurants. What's your favorite type of cuisine? I'm adventurous 😊`;
-      }
-      
-      if (msg.includes('hobby') || msg.includes('fun') || msg.includes('free time')) {
-        return `In my free time I'm really into ${profile.interests.split(',')[1]}. It helps me unwind. What about you - what makes you happy?`;
-      }
-      
-      // Thoughtful/connection responses
-      if (msg.includes('why') || msg.includes('how') || msg.includes('what made')) {
-        return `That's a good question! I like that you're curious 😊 ${profile.style}. What about you - what drives you?`;
-      }
-      
-      if (msg.includes('tell me') || msg.includes('about you')) {
-        return `Well, I'm ${profile.personality}. I love ${profile.interests}. But enough about me - I want to know what makes YOU interesting! 😉`;
-      }
-      
-      // Default responses
-      const defaults = [
-        `That's interesting! Tell me more about that 😊`,
-        `I like the way you think! What else is on your mind?`,
-        `Hmm, I'm intrigued... keep talking, I'm listening 👂`,
-        `You're pretty easy to talk to! What else would you like to know about me?`,
-        `Ha! You're funny 😄 I appreciate a good sense of humor. What else you got?`
-      ];
-      
-      return defaults[Math.floor(Math.random() * defaults.length)];
     }
 
     function escapeHtml(text) {
