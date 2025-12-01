@@ -305,11 +305,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Default checkout links (fall back if localStorage not set). Update when you provide URLs.
   const defaultCheckoutLinks = {
     '1': 'https://rad-supply.mycartpanda.com/checkout/202808132:1', // 1-month link provided by user
-    '3': 'https://rad-supply.mycartpanda.com/checkout/202811161:1', // 3-month link provided by user
+    '3': 'https://rad-supply.mycartpanda.com/ckt/Ygo8yR', // 3-month link
     '6': 'https://rad-supply.mycartpanda.com/checkout/202811355:1'
   };
   function applyCheckoutLinks() {
-    // Checkout links disabled - buttons are now static
+    try {
+      const raw = localStorage.getItem('manthor_checkout_links');
+      const links = raw ? JSON.parse(raw) : defaultCheckoutLinks;
+      [['1','buy-1-btn'], ['3','buy-3-btn'], ['6','buy-6-btn']].forEach(([months,id]) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        const url = links[months] || '#';
+        btn.dataset.url = url;
+        btn.onclick = (e) => {
+          if (!url || url === '#') {
+            e.preventDefault();
+            return;
+          }
+          window.location.href = url;
+        };
+      });
+    } catch (e) { console.warn('applyCheckoutLinks failed', e); }
   }
 
   // Expose helper to set checkout links from console or programmatically
