@@ -306,13 +306,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const defaultCheckoutLinks = {
     '1': 'https://rad-supply.mycartpanda.com/checkout/202808132:1', // 1-month link provided by user
     '3': 'https://rad-supply.mycartpanda.com/ckt/Ygo8yR', // 3-month link
-    '6': 'https://rad-supply.mycartpanda.com/ckt/8wQMWR' // 6-month link
+    '6': 'https://rad-supply.mycartpanda.com/ckt/8wQMWR', // 6-month link
+    '9': 'https://rad-supply.mycartpanda.com/ckt/wx8LmD' // 9-month link
   };
   function applyCheckoutLinks() {
     try {
       const raw = localStorage.getItem('manthor_checkout_links');
       const links = raw ? JSON.parse(raw) : defaultCheckoutLinks;
-      [['1','buy-1-btn'], ['3','buy-3-btn'], ['6','buy-6-btn']].forEach(([months,id]) => {
+      [['1','buy-1-btn'], ['3','buy-3-btn'], ['6','buy-6-btn'], ['9','buy-9-btn']].forEach(([months,id]) => {
         const btn = document.getElementById(id);
         if (!btn) return;
         const url = links[months] || '#';
