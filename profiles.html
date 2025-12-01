@@ -81,6 +81,8 @@
           <h4>💡 Respectful Conversation Starter</h4>
           <p>"Hi Jessica! I noticed you're into indie music and photography. What's been inspiring your creative side lately?"</p>
         </div>
+        
+        <button onclick="openChat('Jessica Rivera', 'jessica')" style="width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.3s;">💬 Start Conversation</button>
       </div>
 
       <!-- Profile 2 -->
@@ -122,6 +124,8 @@
           <h4>💡 Respectful Conversation Starter</h4>
           <p>"Hi Sophia! Running your own fitness studio must be rewarding. What got you into the wellness world?"</p>
         </div>
+        
+        <button onclick="openChat('Sophia Chen', 'sophia')" style="width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.3s;">💬 Start Conversation</button>
       </div>
 
       <!-- Profile 3 -->
@@ -163,6 +167,8 @@
           <h4>💡 Respectful Conversation Starter</h4>
           <p>"Hey Emma! Your design work sounds awesome. What's your creative process like when starting a new project?"</p>
         </div>
+        
+        <button onclick="openChat('Emma Laurent', 'emma')" style="width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.3s;">💬 Start Conversation</button>
       </div>
 
       <!-- Profile 4 -->
@@ -204,6 +210,8 @@
           <h4>💡 Respectful Conversation Starter</h4>
           <p>"Hello Maya! I see you appreciate fine dining and theater. What's been your favorite cultural experience recently?"</p>
         </div>
+        
+        <button onclick="openChat('Maya Patel', 'maya')" style="width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.3s;">💬 Start Conversation</button>
       </div>
 
       <div style="margin-top:32px;padding:20px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;">
@@ -223,5 +231,191 @@
       </div>
     </div>
   </div>
+
+  <!-- Chat Modal -->
+  <div id="chatModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;overflow:auto;">
+    <div style="max-width:800px;margin:20px auto;background:linear-gradient(135deg,rgba(26,26,26,0.98),rgba(20,20,20,0.98));border:2px solid #f97316;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+      <div style="padding:20px;border-bottom:2px solid rgba(220,38,38,0.2);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 id="chatName" style="color:#f97316;margin:0;font-size:24px;"></h2>
+          <p style="color:#9ca3af;margin:4px 0 0 0;font-size:13px;">AI Practice Conversation</p>
+        </div>
+        <button onclick="closeChat()" style="background:transparent;border:2px solid #dc2626;color:#dc2626;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;">✕ Close</button>
+      </div>
+      
+      <div id="chatMessages" style="height:400px;overflow-y:auto;padding:20px;"></div>
+      
+      <div style="padding:20px;border-top:2px solid rgba(220,38,38,0.2);">
+        <div style="display:flex;gap:12px;">
+          <input id="userMessage" type="text" placeholder="Type your message..." style="flex:1;padding:12px;background:rgba(10,10,10,0.8);border:2px solid rgba(220,38,38,0.3);border-radius:8px;color:#fff;font-size:15px;" onkeypress="if(event.key==='Enter') sendMessage()">
+          <button onclick="sendMessage()" style="padding:12px 24px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;">Send</button>
+        </div>
+        <p style="color:#9ca3af;font-size:12px;margin:8px 0 0 0;text-align:center;">💡 Practice respectful flirting and build confidence</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentProfile = null;
+    let chatHistory = [];
+
+    const profiles = {
+      jessica: {
+        name: 'Jessica Rivera',
+        personality: 'outgoing, witty, creative, loves deep conversations',
+        interests: 'indie music, photography, psychology, art',
+        style: 'playful yet thoughtful, appreciates humor and intelligence'
+      },
+      sophia: {
+        name: 'Sophia Chen',
+        personality: 'confident, direct, playful, values substance',
+        interests: 'fitness, wine, travel, wellness',
+        style: 'straightforward but warm, appreciates ambition'
+      },
+      emma: {
+        name: 'Emma Laurent',
+        personality: 'warm, free-spirited, authentic, spontaneous',
+        interests: 'art, festivals, sustainable living, yoga',
+        style: 'easygoing and open, loves meaningful connection'
+      },
+      maya: {
+        name: 'Maya Patel',
+        personality: 'sophisticated, reserved but opens up, values maturity',
+        interests: 'fine dining, theater, wine, culture',
+        style: 'elegant and discerning, appreciates depth'
+      }
+    };
+
+    function openChat(name, profileId) {
+      currentProfile = profiles[profileId];
+      chatHistory = [];
+      document.getElementById('chatModal').style.display = 'block';
+      document.getElementById('chatName').textContent = name;
+      document.getElementById('chatMessages').innerHTML = `
+        <div style="text-align:center;padding:20px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:10px;margin-bottom:16px;">
+          <p style="color:#d1d5db;margin:0;font-size:14px;line-height:1.6;">You're now chatting with <strong style="color:#f97316;">${name}</strong> (AI simulation). Practice your conversation skills in a safe, judgment-free environment.</p>
+        </div>
+        <div style="background:rgba(220,38,38,0.1);padding:12px 16px;border-radius:10px;margin-bottom:12px;border-left:4px solid #f97316;">
+          <p style="color:#d1d5db;margin:0;font-size:14px;"><strong style="color:#f97316;">${name}:</strong> Hey! Thanks for reaching out 😊 What caught your attention?</p>
+        </div>
+      `;
+      document.getElementById('userMessage').focus();
+    }
+
+    function closeChat() {
+      document.getElementById('chatModal').style.display = 'none';
+      currentProfile = null;
+      chatHistory = [];
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('userMessage');
+      const message = input.value.trim();
+      
+      if (!message || !currentProfile) return;
+      
+      // Add user message
+      const messagesDiv = document.getElementById('chatMessages');
+      messagesDiv.innerHTML += `
+        <div style="background:rgba(34,197,94,0.1);padding:12px 16px;border-radius:10px;margin-bottom:12px;border-left:4px solid #22c55e;text-align:right;">
+          <p style="color:#d1d5db;margin:0;font-size:14px;"><strong style="color:#22c55e;">You:</strong> ${escapeHtml(message)}</p>
+        </div>
+      `;
+      
+      chatHistory.push({ role: 'user', content: message });
+      input.value = '';
+      
+      // Generate AI response
+      setTimeout(() => {
+        const response = generateResponse(message);
+        messagesDiv.innerHTML += `
+          <div style="background:rgba(220,38,38,0.1);padding:12px 16px;border-radius:10px;margin-bottom:12px;border-left:4px solid #f97316;">
+            <p style="color:#d1d5db;margin:0;font-size:14px;"><strong style="color:#f97316;">${currentProfile.name}:</strong> ${response}</p>
+          </div>
+        `;
+        chatHistory.push({ role: 'assistant', content: response });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }, 800);
+      
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function generateResponse(userMessage) {
+      const msg = userMessage.toLowerCase();
+      const profile = currentProfile;
+      
+      // Flirty/playful responses
+      if (msg.includes('beautiful') || msg.includes('pretty') || msg.includes('gorgeous') || msg.includes('hot')) {
+        return `Aww, you're sweet 😊 I appreciate the compliment! So tell me, what else caught your eye besides my looks?`;
+      }
+      
+      if (msg.includes('date') || msg.includes('meet') || msg.includes('hang out') || msg.includes('grab')) {
+        return `I like your confidence! 😉 I'd love to get to know you a bit more first though. What do you like to do for fun?`;
+      }
+      
+      if (msg.includes('drink') || msg.includes('wine') || msg.includes('coffee')) {
+        return `A drink sounds nice! I'm more of a ${profile.interests.includes('wine') ? 'wine' : 'coffee'} person myself. What about you? 🍷☕`;
+      }
+      
+      if (msg.includes('music') || msg.includes('song') || msg.includes('concert')) {
+        return `Oh you like music too? That's awesome! I've been really into ${profile.interests.split(',')[0]} lately. What kind of music gets you moving?`;
+      }
+      
+      if (msg.includes('work') || msg.includes('job') || msg.includes('do for')) {
+        return `Work keeps me busy but I love what I do! It's all about balance though. I make sure to have fun too 😏 What about you?`;
+      }
+      
+      if (msg.includes('sexy') || msg.includes('body') || msg.includes('figure')) {
+        return `Ha! You're being forward 😅 I appreciate fitness and taking care of myself. But let's get to know each other's minds first, yeah?`;
+      }
+      
+      if (msg.includes('tonight') || msg.includes('come over') || msg.includes('your place')) {
+        return `Easy there! 😂 I like a guy who's interested but I'm not that easy to get. Let's build some chemistry first, don't you think?`;
+      }
+      
+      if (msg.includes('like you') || msg.includes('into you') || msg.includes('attracted')) {
+        return `That's really sweet to hear 💕 I'm enjoying talking to you too. There's something intriguing about you... tell me more about yourself?`;
+      }
+      
+      // Interest-based responses
+      if (msg.includes('travel') || msg.includes('vacation')) {
+        return `I LOVE traveling! There's something so exciting about exploring new places. Where's your dream destination? 🌍`;
+      }
+      
+      if (msg.includes('food') || msg.includes('restaurant') || msg.includes('eat')) {
+        return `Ooh a foodie! I'm always down to try new restaurants. What's your favorite type of cuisine? I'm adventurous 😊`;
+      }
+      
+      if (msg.includes('hobby') || msg.includes('fun') || msg.includes('free time')) {
+        return `In my free time I'm really into ${profile.interests.split(',')[1]}. It helps me unwind. What about you - what makes you happy?`;
+      }
+      
+      // Thoughtful/connection responses
+      if (msg.includes('why') || msg.includes('how') || msg.includes('what made')) {
+        return `That's a good question! I like that you're curious 😊 ${profile.style}. What about you - what drives you?`;
+      }
+      
+      if (msg.includes('tell me') || msg.includes('about you')) {
+        return `Well, I'm ${profile.personality}. I love ${profile.interests}. But enough about me - I want to know what makes YOU interesting! 😉`;
+      }
+      
+      // Default responses
+      const defaults = [
+        `That's interesting! Tell me more about that 😊`,
+        `I like the way you think! What else is on your mind?`,
+        `Hmm, I'm intrigued... keep talking, I'm listening 👂`,
+        `You're pretty easy to talk to! What else would you like to know about me?`,
+        `Ha! You're funny 😄 I appreciate a good sense of humor. What else you got?`
+      ];
+      
+      return defaults[Math.floor(Math.random() * defaults.length)];
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
 </body>
 </html>
