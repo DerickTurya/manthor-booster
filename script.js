@@ -323,6 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             return;
           }
+          // Mark as purchased when user clicks buy button
+          localStorage.setItem('manthor_purchased', 'true');
           window.location.href = url;
         };
       });

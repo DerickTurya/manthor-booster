@@ -56,6 +56,30 @@
         const container = document.getElementById('personalized-result');
         if (!container) return;
 
+        // Check if user has purchased
+        function hasPurchased() {
+          return localStorage.getItem('manthor_purchased') === 'true';
+        }
+
+        function showPurchaseRequired() {
+          container.innerHTML = `
+            <div style="background:linear-gradient(135deg,rgba(220,38,38,0.2),rgba(249,115,22,0.1));border:2px solid rgba(220,38,38,0.4);padding:32px;border-radius:16px;text-align:center;">
+              <div style="font-size:64px;margin-bottom:16px;">🔒</div>
+              <h2 style="color:#f97316;margin:0 0 16px 0;font-size:24px;">Premium Diet Plans Locked</h2>
+              <p style="color:#d1d5db;font-size:16px;line-height:1.6;margin-bottom:24px;">
+                To access your personalized diet plans, you need to purchase ManThor first.<br>
+                Get your transformation package and unlock all premium features!
+              </p>
+              <a href="comprar.html" style="display:inline-block;padding:16px 32px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:10px;color:#fff;font-size:18px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s;">
+                🛒 View Plans & Purchase
+              </a>
+              <div style="margin-top:20px;">
+                <a href="index.html" style="color:#f97316;font-size:14px;text-decoration:none;">← Back to Main Menu</a>
+              </div>
+            </div>
+          `;
+        }
+
         function goalLabel(key) {
           if (!key) return '';
           const map = {
@@ -372,6 +396,12 @@
           }
         } catch(e){ /* ignore parse errors */ }
 
+        // Check if user has purchased before showing content
+        if (!hasPurchased()) {
+          showPurchaseRequired();
+          return;
+        }
+
         // No stored personalized routine or generated diet — show enhanced generator UI
         container.innerHTML = `
           <div class="generator-box">
@@ -382,17 +412,11 @@
               <label for="gen-goal">Primary Goal</label>
               <select id="gen-goal">
                 <option value="">-- Select Your Goal --</option>
-                <option value="vitality">🌟 Vitality & Wellness (FREE)</option>
-                <option value="gain_mass">💪 Gain Muscle Mass 🔒 PREMIUM</option>
-                <option value="lose_weight">🔥 Lose Weight 🔒 PREMIUM</option>
-                <option value="definition">⚡ Definition & Cutting 🔒 PREMIUM</option>
+                <option value="gain_mass">💪 Gain Muscle Mass</option>
+                <option value="lose_weight">🔥 Lose Weight</option>
+                <option value="definition">⚡ Definition & Cutting</option>
+                <option value="vitality">🌟 Vitality & Wellness</option>
               </select>
-            </div>
-            
-            <div id="premium-notice" style="display:none;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(220,38,38,0.15));border:2px solid #f97316;border-radius:10px;padding:16px;margin-bottom:16px;">
-              <h4 style="color:#f97316;margin:0 0 8px 0;font-size:16px;">🔒 Premium Plan Required</h4>
-              <p style="color:#d1d5db;font-size:14px;margin:0 0 12px 0;">Advanced goal plans (Muscle Gain, Weight Loss, Definition) require a premium subscription.</p>
-              <a href="comprar.html" style="display:inline-block;padding:10px 20px;background:linear-gradient(135deg,#dc2626,#b91c1c);border:2px solid #f97316;border-radius:8px;color:#fff;font-size:14px;font-weight:700;text-decoration:none;text-transform:uppercase;letter-spacing:1px;">🔥 Unlock Premium Plans</a>
             </div>
             
             <div id="form-fields" style="display:none;">
