@@ -388,7 +388,9 @@ You're having a flirty, engaging conversation. Be playful, warm, and show intere
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `API request failed with status ${response.status}`);
+        console.error('Full error response:', errorData);
+        const errorMsg = errorData.details || errorData.error || `API request failed with status ${response.status}`;
+        throw new Error(errorMsg);
       }
       
       const data = await response.json();
